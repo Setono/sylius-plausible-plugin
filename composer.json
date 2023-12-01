@@ -1,6 +1,6 @@
 {
-    "name": "setono/sylius-plugin-skeleton",
-    "description": "Acme example plugin for Sylius.",
+    "name": "setono/sylius-plausible-plugin",
+    "description": "Setono example plugin for Sylius.",
     "license": "MIT",
     "type": "sylius-plugin",
     "keywords": [
@@ -27,7 +27,7 @@
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.18",
         "setono/code-quality-pack": "^2.4",
-        "sylius/sylius": "~1.12.3",
+        "sylius/sylius": "~1.12.12",
         "symfony/debug-bundle": "^5.4 || ^6.0",
         "symfony/dotenv": "^5.4 || ^6.0",
         "symfony/intl": "^5.4 || ^6.0",
@@ -40,12 +40,12 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/"
+            "Setono\\SyliusPlausiblePlugin\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "Tests\\Setono\\SyliusPlausiblePlugin\\": "tests/"
         },
         "classmap": [
             "tests/Application/Kernel.php"
