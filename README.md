@@ -8,6 +8,19 @@
 
 Use [Plausible Analytics](https://plausible.io) to track visitors and events in your Sylius store.
 
+## Installation
+
+### Step 1: Install and enable plugin
+
+```bash
+composer require setono/sylius-plausible-plugin
+```
+
+## Usage
+
+If you have created your website in the Plausible dashboard, the plugin will just work out of the box. Enjoy 🎉
+
+
 [ico-version]: https://poser.pugx.org/setono/sylius-plausible-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-plausible-plugin/license
 [ico-github-actions]: https://github.com/Setono/sylius-plausible-plugin/workflows/build/badge.svg
