@@ -17,11 +17,24 @@ final class Configuration implements ConfigurationInterface
         /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
 
+        /** @psalm-suppress MixedMethodCall,PossiblyNullReference,UndefinedInterfaceMethod */
         $rootNode
+            ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('option')
-                    ->info('This is an example configuration option')
-                    ->isRequired()
+                ->arrayNode('client_side')
+                    ->canBeDisabled()
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('script')
+                            ->info('The Plausible script to use. See available scripts here: https://plausible.io/docs/script-extensions')
+                            ->defaultValue('https://plausible.io/js/script.revenue.js')
+                            ->cannotBeEmpty()
+                        ->end()
+                    ->end()
+                ->end()
+                ->scalarNode('domain')
+                    ->info('The domain to use for the tracking script. If not set, the domain will be inferred from the request. This is useful for testing purposes when you want to test the implementation on a different domain than the one you are currently on')
+                    ->defaultNull()
                     ->cannotBeEmpty()
         ;
 

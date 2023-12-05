@@ -1,2 +1,4 @@
 setono_sylius_plausible:
-    option: Option value
+    client_side:
+        script: 'https://plausible.io/js/script.local.revenue.js'
+    domain: 'setono.com'
