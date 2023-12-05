@@ -47,7 +47,7 @@ final class BeginCheckoutSubscriber extends AbstractEventSubscriber
             Assert::isInstanceOf($order, OrderInterface::class);
 
             $this->eventBus->dispatch(
-                (new Event(Events::BEGIN_CHECKOUT))->setProperty('orderId', (string) $order->getId()),
+                (new Event(Events::BEGIN_CHECKOUT))->setProperty('order_id', (string) $order->getId()),
             );
         } catch (\Throwable $e) {
             $this->log(Events::BEGIN_CHECKOUT, $e);
