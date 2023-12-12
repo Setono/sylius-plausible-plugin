@@ -27,7 +27,7 @@ final class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('script')
                             ->info('The Plausible script to use. See available scripts here: https://plausible.io/docs/script-extensions')
-                            ->defaultValue('https://plausible.io/js/script.revenue.js')
+                            ->defaultValue('https://plausible.io/js/script.manual.revenue.js')
                             ->cannotBeEmpty()
                         ->end()
                     ->end()

@@ -10,6 +10,11 @@ final class Events
 
     final public const BEGIN_CHECKOUT = 'Begin Checkout';
 
+    /**
+     * This is a special event in Plausible, hence the lowercase name
+     */
+    final public const PAGEVIEW = 'pageview';
+
     final public const PURCHASE = 'Purchase';
 
     final public const SELECT_SHIPPING_METHOD = 'Select Shipping Method';
