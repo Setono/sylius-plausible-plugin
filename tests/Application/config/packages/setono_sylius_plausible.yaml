@@ -1,4 +1,4 @@
 setono_sylius_plausible:
     client_side:
         script: 'https://plausible.io/js/script.local.revenue.js'
-    domain: 'setono.com'
+    domain: 'wattoo.dk'
