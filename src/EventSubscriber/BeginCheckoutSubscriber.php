@@ -46,7 +46,7 @@ final class BeginCheckoutSubscriber extends AbstractEventSubscriber
             $order = $this->cartContext->getCart();
             Assert::isInstanceOf($order, OrderInterface::class);
 
-            $this->eventBus->dispatch((new Event(Events::BEGIN_CHECKOUT))->addContext('order', $order));
+            $this->eventBus->dispatch(new Event(Events::BEGIN_CHECKOUT));
         } catch (\Throwable $e) {
             $this->log(Events::BEGIN_CHECKOUT, $e);
         }

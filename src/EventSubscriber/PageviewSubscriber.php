@@ -20,11 +20,11 @@ final class PageviewSubscriber extends AbstractEventSubscriber
 
     public function track(RequestEvent $requestEvent): void
     {
-        try {
-            if (!$requestEvent->isMainRequest()) {
-                return;
-            }
+        if (!$requestEvent->isMainRequest()) {
+            return;
+        }
 
+        try {
             $this->eventBus->dispatch(new Event(Events::PAGEVIEW));
         } catch (\Throwable $e) {
             $this->log(Events::PAGEVIEW, $e);
