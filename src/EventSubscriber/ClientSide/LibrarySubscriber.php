@@ -39,7 +39,8 @@ final class LibrarySubscriber implements EventSubscriberInterface
 
         $this->tagBag->add(
             InlineScriptTag::create('window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }')
-                ->withPriority(100),
+                ->withPriority(100)
+                ->withSection(TagInterface::SECTION_HEAD),
         );
 
         $domain = $this->domain ?? u($event->getRequest()->getHost())->trimPrefix('www.')->toString();
