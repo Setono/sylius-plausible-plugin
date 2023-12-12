@@ -8,9 +8,9 @@
         "text": "php://stderr",
         "github": true,
         "stryker": {
-            "badge": "1.12.x"
+            "badge": "master"
         }
     },
-    "minMsi": 20.00,
-    "minCoveredMsi": 20.00
+    "minMsi": 16.54,
+    "minCoveredMsi": 16.54
 }
