@@ -26,6 +26,7 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
             return;
         }
 
+        /** @var OrderInterface|mixed $order */
         $order = $context['order'];
         Assert::isInstanceOf($order, OrderInterface::class);
 
