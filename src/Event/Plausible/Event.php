@@ -12,6 +12,9 @@ class Event implements \JsonSerializable
 
     private ?Revenue $revenue = null;
 
+    /** @var array<string, mixed> */
+    private array $context = [];
+
     public function __construct(private readonly string $name)
     {
         $this->properties = new Properties();
@@ -59,6 +62,31 @@ class Event implements \JsonSerializable
     public function setRevenue(string $currency, float $amount): static
     {
         $this->revenue = new Revenue($currency, $amount);
+
+        return $this;
+    }
+
+    public function getContext(): array
+    {
+        return $this->context;
+    }
+
+    /**
+     * You can set an event specific context that event listeners can use to add more data to the event.
+     * The context is not sent to Plausible.
+     *
+     * @param array<string, mixed> $context
+     */
+    public function setContext(array $context): static
+    {
+        $this->context = $context;
+
+        return $this;
+    }
+
+    public function addContext(string $key, mixed $value): static
+    {
+        $this->context[$key] = $value;
 
         return $this;
     }

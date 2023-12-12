@@ -11,7 +11,6 @@ use Sylius\Component\Order\Repository\OrderRepositoryInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Webmozart\Assert\Assert;
 
 final class PurchaseSubscriber extends AbstractEventSubscriber
 {
@@ -53,13 +52,9 @@ final class PurchaseSubscriber extends AbstractEventSubscriber
                 return;
             }
 
-            $channel = $order->getChannel();
-            Assert::notNull($channel);
-
             $this->eventBus->dispatch(
                 (new Event(Events::PURCHASE))
-                    ->setProperty('order_id', (string) $order->getId())
-                    ->setProperty('order_number', (string) $order->getNumber())
+                    ->addContext('order', $order)
                     ->setRevenue((string) $order->getCurrencyCode(), self::formatAmount($order->getTotal())),
             );
         } catch (\Throwable $e) {

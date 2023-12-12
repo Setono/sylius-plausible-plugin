@@ -26,23 +26,7 @@ final class AddShippingInfoSubscriber extends AbstractEventSubscriber
             $order = $resourceControllerEvent->getSubject();
             Assert::isInstanceOf($order, OrderInterface::class);
 
-            $shippingMethodCode = null;
-            foreach ($order->getShipments() as $shipment) {
-                $shippingMethod = $shipment->getMethod();
-                if (null === $shippingMethod) {
-                    continue;
-                }
-
-                $shippingMethodCode = $shippingMethod->getCode();
-            }
-            Assert::notNull($shippingMethodCode);
-
-            $this->eventBus->dispatch(
-                (new Event(Events::ADD_SHIPPING_INFO))
-                    ->setProperty('order_id', (string) $order->getId())
-                    ->setProperty('order_number', (string) $order->getNumber())
-                    ->setProperty('shipping_method', $shippingMethodCode),
-            );
+            $this->eventBus->dispatch((new Event(Events::ADD_SHIPPING_INFO))->addContext('order', $order));
         } catch (\Throwable $e) {
             $this->log(Events::ADD_PAYMENT_INFO, $e);
         }

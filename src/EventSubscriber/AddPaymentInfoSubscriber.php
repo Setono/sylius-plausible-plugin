@@ -26,21 +26,7 @@ final class AddPaymentInfoSubscriber extends AbstractEventSubscriber
             $order = $resourceControllerEvent->getSubject();
             Assert::isInstanceOf($order, OrderInterface::class);
 
-            $lastPayment = $order->getLastPayment();
-            Assert::notNull($lastPayment);
-
-            $paymentMethod = $lastPayment->getMethod();
-            Assert::notNull($paymentMethod);
-
-            $paymentMethodCode = $paymentMethod->getCode();
-            Assert::notNull($paymentMethodCode);
-
-            $this->eventBus->dispatch(
-                (new Event(Events::ADD_PAYMENT_INFO))
-                    ->setProperty('order_id', (string) $order->getId())
-                    ->setProperty('order_number', (string) $order->getNumber())
-                    ->setProperty('payment_method', $paymentMethodCode),
-            );
+            $this->eventBus->dispatch((new Event(Events::ADD_PAYMENT_INFO))->addContext('order', $order));
         } catch (\Throwable $e) {
             $this->log(Events::ADD_PAYMENT_INFO, $e);
         }
