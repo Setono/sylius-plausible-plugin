@@ -25,7 +25,7 @@ If you have created your website in the Plausible dashboard, the plugin will jus
 [ico-license]: https://poser.pugx.org/setono/sylius-plausible-plugin/license
 [ico-github-actions]: https://github.com/Setono/sylius-plausible-plugin/workflows/build/badge.svg
 [ico-code-coverage]: https://codecov.io/gh/Setono/sylius-plausible-plugin/branch/master/graph/badge.svg
-[ico-infection]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FSetono%2FSyliusPluginSkeleton%2Fmaster
+[ico-infection]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FSetono%2Fsylius-plausible-plugin%2Fmaster
 
 [link-packagist]: https://packagist.org/packages/setono/sylius-plausible-plugin
 [link-github-actions]: https://github.com/Setono/sylius-plausible-plugin/actions
