@@ -37,6 +37,11 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
             ->setProperty('order_promotion_total', $order->getOrderPromotionTotal())
         ;
 
+        $couponCode = $order->getPromotionCoupon()?->getCode();
+        if (null !== $couponCode) {
+            $event->event->setProperty('coupon_code', $couponCode);
+        }
+
         self::populateShippingMethod($order, $event->event);
         self::populatePaymentMethod($order, $event->event);
     }
