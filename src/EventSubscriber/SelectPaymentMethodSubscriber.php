@@ -10,7 +10,7 @@ use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Sylius\Component\Core\Model\OrderInterface;
 use Webmozart\Assert\Assert;
 
-final class AddPaymentInfoSubscriber extends AbstractEventSubscriber
+final class SelectPaymentMethodSubscriber extends AbstractEventSubscriber
 {
     public static function getSubscribedEvents(): array
     {
@@ -26,9 +26,9 @@ final class AddPaymentInfoSubscriber extends AbstractEventSubscriber
             $order = $resourceControllerEvent->getSubject();
             Assert::isInstanceOf($order, OrderInterface::class);
 
-            $this->eventBus->dispatch((new Event(Events::ADD_PAYMENT_INFO))->addContext('order', $order));
+            $this->eventBus->dispatch((new Event(Events::SELECT_PAYMENT_METHOD))->addContext('order', $order));
         } catch (\Throwable $e) {
-            $this->log(Events::ADD_PAYMENT_INFO, $e);
+            $this->log(Events::SELECT_PAYMENT_METHOD, $e);
         }
     }
 }

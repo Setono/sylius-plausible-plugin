@@ -35,6 +35,7 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
         ;
 
         self::populateShippingMethod($order, $event->event);
+        self::populatePaymentMethod($order, $event->event);
     }
 
     private static function populateShippingMethod(OrderInterface $order, Event $event): void

@@ -10,7 +10,7 @@ use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Sylius\Component\Core\Model\OrderInterface;
 use Webmozart\Assert\Assert;
 
-final class AddShippingInfoSubscriber extends AbstractEventSubscriber
+final class SelectShippingMethodSubscriber extends AbstractEventSubscriber
 {
     public static function getSubscribedEvents(): array
     {
@@ -26,9 +26,9 @@ final class AddShippingInfoSubscriber extends AbstractEventSubscriber
             $order = $resourceControllerEvent->getSubject();
             Assert::isInstanceOf($order, OrderInterface::class);
 
-            $this->eventBus->dispatch((new Event(Events::ADD_SHIPPING_INFO))->addContext('order', $order));
+            $this->eventBus->dispatch((new Event(Events::SELECT_SHIPPING_METHOD))->addContext('order', $order));
         } catch (\Throwable $e) {
-            $this->log(Events::ADD_PAYMENT_INFO, $e);
+            $this->log(Events::SELECT_SHIPPING_METHOD, $e);
         }
     }
 }
