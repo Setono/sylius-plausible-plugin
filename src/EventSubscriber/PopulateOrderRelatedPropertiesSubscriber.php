@@ -33,6 +33,8 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
         $event->event
             ->setProperty('order_id', (string) $order->getId())
             ->setProperty('order_number', (string) $order->getNumber())
+            ->setProperty('shipping_total', $order->getShippingTotal())
+            ->setProperty('order_promotion_total', $order->getOrderPromotionTotal())
         ;
 
         self::populateShippingMethod($order, $event->event);
