@@ -8,6 +8,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
+use Setono\SyliusPlausiblePlugin\Event\Plausible\Events;
 use Setono\TagBag\Tag\InlineScriptTag;
 use Setono\TagBag\TagBagInterface;
 
@@ -35,9 +36,11 @@ final class ClientSideEventHandler implements LoggerAwareInterface
             return;
         }
 
-        $this->tagBag->add(InlineScriptTag::create(
-            '{}' === $json ? sprintf('plausible("%s");', $event->getName()) : sprintf('plausible("%s", %s);', $event->getName(), $json),
-        ));
+        $this->tagBag->add(
+            InlineScriptTag::create(
+                '{}' === $json ? sprintf('plausible("%s");', $event->getName()) : sprintf('plausible("%s", %s);', $event->getName(), $json),
+            )->withPriority($event->getName() === Events::PAGEVIEW ? 5 : 0), // make sure the pageview event is sent before other events
+        );
     }
 
     public function setLogger(LoggerInterface $logger): void
