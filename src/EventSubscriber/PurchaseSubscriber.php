@@ -54,7 +54,6 @@ final class PurchaseSubscriber extends AbstractEventSubscriber
 
             $this->eventBus->dispatch(
                 (new Event(Events::PURCHASE))
-                    ->addContext('order', $order)
                     ->setRevenue((string) $order->getCurrencyCode(), self::formatAmount($order->getTotal())),
             );
         } catch (\Throwable $e) {

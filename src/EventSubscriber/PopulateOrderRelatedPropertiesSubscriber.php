@@ -5,45 +5,55 @@ declare(strict_types=1);
 namespace Setono\SyliusPlausiblePlugin\EventSubscriber;
 
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
-use Setono\SyliusPlausiblePlugin\Event\PreSendEvent;
+use Setono\SyliusPlausiblePlugin\Event\PopulateEvent;
 use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Order\Context\CartContextInterface;
+use Sylius\Component\Order\Context\CartNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Webmozart\Assert\Assert;
 
 final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberInterface
 {
+    public function __construct(private readonly CartContextInterface $cartContext)
+    {
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
-            PreSendEvent::class => 'populate',
+            PopulateEvent::class => 'populate',
         ];
     }
 
-    public function populate(PreSendEvent $event): void
+    public function populate(PopulateEvent $event): void
     {
-        $context = $event->event->getContext();
-        if (!isset($context['order'])) {
+        try {
+            $order = $this->cartContext->getCart();
+        } catch (CartNotFoundException) {
             return;
         }
 
-        /** @var OrderInterface|mixed $order */
-        $order = $context['order'];
-        Assert::isInstanceOf($order, OrderInterface::class);
-
-        $event->event
-            ->setProperty('order_id', (string) $order->getId())
-            ->setProperty('order_number', (string) $order->getNumber())
-            ->setProperty('shipping_total', $order->getShippingTotal())
-            ->setProperty('order_promotion_total', $order->getOrderPromotionTotal())
-        ;
-
-        $couponCode = $order->getPromotionCoupon()?->getCode();
-        if (null !== $couponCode) {
-            $event->event->setProperty('coupon_code', $couponCode);
+        if (!$order instanceof OrderInterface) {
+            return;
         }
 
+        /** @var mixed $orderId */
+        $orderId = $order->getId();
+
+        // if the order id is null it means that the order has not been persisted yet
+        if (null === $orderId) {
+            return;
+        }
+
+        $event->event
+            ->setProperty('order_id', $orderId)
+            ->setProperty('order_number', $order->getNumber())
+            ->setProperty('shipping_total', $order->getShippingTotal())
+            ->setProperty('order_promotion_total', $order->getOrderPromotionTotal())
+            ->setProperty('payment_method', $order->getLastPayment()?->getMethod()?->getCode())
+            ->setProperty('coupon_code', $order->getPromotionCoupon()?->getCode())
+        ;
+
         self::populateShippingMethod($order, $event->event);
-        self::populatePaymentMethod($order, $event->event);
     }
 
     private static function populateShippingMethod(OrderInterface $order, Event $event): void
@@ -58,16 +68,6 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
             $shippingMethodCode = $shippingMethod->getCode();
         }
 
-        if (null !== $shippingMethodCode) {
-            $event->setProperty('shipping_method', $shippingMethodCode);
-        }
-    }
-
-    private static function populatePaymentMethod(OrderInterface $order, Event $event): void
-    {
-        $paymentMethodCode = $order->getLastPayment()?->getMethod()?->getCode();
-        if (null !== $paymentMethodCode) {
-            $event->setProperty('payment_method', $paymentMethodCode);
-        }
+        $event->setProperty('shipping_method', $shippingMethodCode);
     }
 }

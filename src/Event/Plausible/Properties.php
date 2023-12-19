@@ -83,9 +83,9 @@ final class Properties implements \Countable, \JsonSerializable, \IteratorAggreg
         unset($this->properties[$offset]);
     }
 
-    public function jsonSerialize(): ?array
+    public function jsonSerialize(): array
     {
-        return $this->properties;
+        return array_filter($this->properties, static fn (mixed $value): bool => null !== $value && '' !== $value);
     }
 
     /**

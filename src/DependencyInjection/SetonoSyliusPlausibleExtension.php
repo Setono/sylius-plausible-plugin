@@ -37,7 +37,11 @@ final class SetonoSyliusPlausibleExtension extends Extension implements PrependE
         $container->prependExtensionConfig('framework', [
             'messenger' => [
                 'buses' => [
-                    'setono_sylius_plausible.event_bus' => null,
+                    'setono_sylius_plausible.event_bus' => [
+                        'middleware' => [
+                            'setono_sylius_plausible.message.middleware.populate',
+                        ],
+                    ],
                 ],
             ],
         ]);
