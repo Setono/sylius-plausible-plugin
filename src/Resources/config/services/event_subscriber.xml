@@ -12,7 +12,6 @@
         <service id="setono_sylius_plausible.event_subscriber.begin_checkout"
                  class="Setono\SyliusPlausiblePlugin\EventSubscriber\BeginCheckoutSubscriber">
             <argument type="service" id="setono_sylius_plausible.event_bus"/>
-            <argument type="service" id="sylius.context.cart"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
