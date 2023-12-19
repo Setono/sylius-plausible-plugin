@@ -20,6 +20,11 @@ composer require setono/sylius-plausible-plugin
 
 If you have created your website in the Plausible dashboard, the plugin will just work out of the box. Enjoy 🎉
 
+## Alter event data
+
+If you want to alter the data sent to Plausible, you can listen to the [AlterEvent](src/Event/AlterEvent.php)
+You can see an example of this in the [PopulateOrderRelatedPropertiesSubscriber](src/EventSubscriber/PopulateOrderRelatedPropertiesSubscriber.php).
+
 ## Configuration
 
 ### Add functionality
