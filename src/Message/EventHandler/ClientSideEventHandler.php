@@ -36,7 +36,7 @@ final class ClientSideEventHandler implements LoggerAwareInterface
         }
 
         $this->tagBag->add(InlineScriptTag::create(
-            sprintf('plausible("%s", %s);', $event->getName(), $json),
+            '{}' === $json ? sprintf('plausible("%s");', $event->getName()) : sprintf('plausible("%s", %s);', $event->getName(), $json),
         ));
     }
 
