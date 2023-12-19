@@ -39,7 +39,7 @@ final class SetonoSyliusPlausibleExtension extends Extension implements PrependE
                 'buses' => [
                     'setono_sylius_plausible.event_bus' => [
                         'middleware' => [
-                            'setono_sylius_plausible.message.middleware.populate',
+                            'setono_sylius_plausible.message.middleware.alter',
                         ],
                     ],
                 ],

@@ -2,8 +2,8 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="setono_sylius_plausible.message.middleware.populate"
-                 class="Setono\SyliusPlausiblePlugin\Message\Middleware\PopulateMiddleware">
+        <service id="setono_sylius_plausible.message.middleware.alter"
+                 class="Setono\SyliusPlausiblePlugin\Message\Middleware\AlterMiddleware">
             <argument type="service" id="event_dispatcher"/>
         </service>
     </services>
