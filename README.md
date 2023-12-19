@@ -10,8 +10,6 @@ Use [Plausible Analytics](https://plausible.io) to track visitors and events in 
 
 ## Installation
 
-### Step 1: Install and enable plugin
-
 ```bash
 composer require setono/sylius-plausible-plugin
 ```
