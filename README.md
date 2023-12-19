@@ -20,6 +20,35 @@ composer require setono/sylius-plausible-plugin
 
 If you have created your website in the Plausible dashboard, the plugin will just work out of the box. Enjoy 🎉
 
+## Configuration
+
+### Add functionality
+
+Plausible use different scripts to enable functionality. Plausible calls them script extensions, and you can read
+about them [here](https://plausible.io/docs/script-extensions).
+
+To use a script extension, you need configure the script in the plugin as follows:
+
+```yaml
+setono_sylius_plausible:
+    client_side:
+        script: "https://plausible.io/js/script.manual.revenue.file-downloads.js"
+``` 
+
+Here I have added the 'file downloads' extension. Notice that I am keeping both the 'manual' and 'revenue' extensions.
+This is because the 'revenue' extension is used for tracking purchases, and the 'manual' extension is used for manual
+tracking of the pageview event.
+
+### Test tracking
+
+If you want to test the plugin in your local environment, you can input the domain and use the local script extension:
+
+```yaml
+setono_sylius_plausible:
+    client_side:
+        script: "https://plausible.io/js/script.manual.revenue.local.js"
+    domain: "your-domain.com"
+``` 
 
 [ico-version]: https://poser.pugx.org/setono/sylius-plausible-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-plausible-plugin/license
