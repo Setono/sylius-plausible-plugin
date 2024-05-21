@@ -18,9 +18,14 @@ final class PageviewSubscriber extends AbstractEventSubscriber
         ];
     }
 
-    public function track(RequestEvent $requestEvent): void
+    public function track(RequestEvent $event): void
     {
-        if (!$requestEvent->isMainRequest()) {
+        if (!$event->isMainRequest() || $event->getRequest()->isXmlHttpRequest()) {
+            return;
+        }
+
+        $accept = $event->getRequest()->headers->get('Accept');
+        if (!is_string($accept) || !str_contains($accept, 'html')) {
             return;
         }
 

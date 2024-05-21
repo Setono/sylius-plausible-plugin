@@ -33,7 +33,12 @@ final class LibrarySubscriber implements EventSubscriberInterface
 
     public function add(RequestEvent $event): void
     {
-        if (!$event->isMainRequest()) {
+        if (!$event->isMainRequest() || $event->getRequest()->isXmlHttpRequest()) {
+            return;
+        }
+
+        $accept = $event->getRequest()->headers->get('Accept');
+        if (!is_string($accept) || !str_contains($accept, 'html')) {
             return;
         }
 
