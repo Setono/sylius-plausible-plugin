@@ -36,11 +36,20 @@ final class ClientSideEventHandler implements LoggerAwareInterface
             return;
         }
 
-        $this->tagBag->add(
-            InlineScriptTag::create(
-                '{}' === $json ? sprintf('plausible("%s");', $event->getName()) : sprintf('plausible("%s", %s);', $event->getName(), $json),
-            )->withPriority($event->getName() === Events::PAGEVIEW ? 5 : 0), // make sure the pageview event is sent before other events
-        );
+        $tag = InlineScriptTag::create('{}' === $json ? sprintf('plausible("%s");', $event->getName()) : sprintf('plausible("%s", %s);', $event->getName(), $json));
+
+        if ($event->getName() === Events::PAGEVIEW) {
+            $tag = $tag
+                // make sure the pageview event is sent before other events
+                ->withPriority(5)
+                // the default pageview event is triggered on the request event, but if you have data you want to add to
+                // the pageview event in the controller you can trigger it there instead
+                // and set the fingerprint to 'plausible-pageview' with a priority higher than 5
+                ->withFingerprint('plausible-pageview')
+            ;
+        }
+
+        $this->tagBag->add($tag);
     }
 
     public function setLogger(LoggerInterface $logger): void
