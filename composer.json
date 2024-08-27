@@ -1,11 +1,13 @@
 {
     "name": "setono/sylius-plausible-plugin",
-    "description": "Setono example plugin for Sylius.",
+    "description": "Start tracking your visitors with Plausible.io",
     "license": "MIT",
     "type": "sylius-plugin",
     "keywords": [
         "sylius",
-        "sylius-plugin"
+        "sylius-plugin",
+        "plausible",
+        "analytics"
     ],
     "require": {
         "php": ">=8.1",
