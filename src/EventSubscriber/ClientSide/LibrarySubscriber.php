@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Setono\SyliusPlausiblePlugin\Event\LibraryTagCreatedEvent;
 use Setono\TagBag\Tag\InlineScriptTag;
 use Setono\TagBag\Tag\ScriptTag;
 use Setono\TagBag\Tag\TagInterface;
@@ -18,6 +20,7 @@ final class LibrarySubscriber implements EventSubscriberInterface
     final public const TAG_FINGERPRINT = 'plausible-library';
 
     public function __construct(
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly TagBagInterface $tagBag,
         private readonly string $script,
         private readonly ?string $domain,
@@ -50,12 +53,16 @@ final class LibrarySubscriber implements EventSubscriberInterface
 
         $domain = $this->domain ?? u($event->getRequest()->getHost())->trimPrefix('www.')->toString();
 
-        $this->tagBag->add(
+        $tagEvent = new LibraryTagCreatedEvent(
             ScriptTag::create($this->script)
                 ->defer()
                 ->withSection(TagInterface::SECTION_HEAD)
                 ->withAttribute('data-domain', $domain)
                 ->withFingerprint(self::TAG_FINGERPRINT),
         );
+
+        $this->eventDispatcher->dispatch($tagEvent);
+
+        $this->tagBag->add($tagEvent->tag);
     }
 }

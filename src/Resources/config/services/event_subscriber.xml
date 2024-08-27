@@ -16,13 +16,6 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_plausible.event_subscriber.pageview"
-                 class="Setono\SyliusPlausiblePlugin\EventSubscriber\PageviewSubscriber">
-            <argument type="service" id="setono_sylius_plausible.event_bus"/>
-
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
         <service id="setono_sylius_plausible.event_subscriber.purchase"
                  class="Setono\SyliusPlausiblePlugin\EventSubscriber\PurchaseSubscriber">
             <argument type="service" id="setono_sylius_plausible.event_bus"/>
