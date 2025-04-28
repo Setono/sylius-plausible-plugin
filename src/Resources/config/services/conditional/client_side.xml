@@ -5,7 +5,6 @@
         <!-- This file includes services specifically for client side tracking -->
 
         <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide\LibrarySubscriber">
-            <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="setono_tag_bag.tag_bag"/>
             <argument>%setono_sylius_plausible.client_side.script%</argument>
             <argument>%setono_sylius_plausible.domain%</argument>
