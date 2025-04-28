@@ -19,7 +19,7 @@ final class SelectPaymentMethodSubscriber extends AbstractEventSubscriber
     public function track(): void
     {
         try {
-            $this->eventBus->dispatch(new Event(Events::SELECT_PAYMENT_METHOD));
+            $this->eventDispatcher->dispatch(new Event(Events::SELECT_PAYMENT_METHOD));
         } catch (\Throwable $e) {
             $this->log(Events::SELECT_PAYMENT_METHOD, $e);
         }

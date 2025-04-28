@@ -2,44 +2,38 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="setono_sylius_plausible.event_subscriber.address"
-                 class="Setono\SyliusPlausiblePlugin\EventSubscriber\AddressSubscriber">
-            <argument type="service" id="setono_sylius_plausible.event_bus"/>
+        <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\AddressSubscriber">
+            <argument type="service" id="event_dispatcher"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_plausible.event_subscriber.begin_checkout"
-                 class="Setono\SyliusPlausiblePlugin\EventSubscriber\BeginCheckoutSubscriber">
-            <argument type="service" id="setono_sylius_plausible.event_bus"/>
+        <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\BeginCheckoutSubscriber">
+            <argument type="service" id="event_dispatcher"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_plausible.event_subscriber.purchase"
-                 class="Setono\SyliusPlausiblePlugin\EventSubscriber\PurchaseSubscriber">
-            <argument type="service" id="setono_sylius_plausible.event_bus"/>
+        <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\PurchaseSubscriber">
+            <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sylius.repository.order"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_plausible.event_subscriber.select_payment_method"
-                 class="Setono\SyliusPlausiblePlugin\EventSubscriber\SelectPaymentMethodSubscriber">
-            <argument type="service" id="setono_sylius_plausible.event_bus"/>
+        <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\SelectPaymentMethodSubscriber">
+            <argument type="service" id="event_dispatcher"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_plausible.event_subscriber.select_shipping_method"
-                 class="Setono\SyliusPlausiblePlugin\EventSubscriber\SelectShippingMethodSubscriber">
-            <argument type="service" id="setono_sylius_plausible.event_bus"/>
+        <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\SelectShippingMethodSubscriber">
+            <argument type="service" id="event_dispatcher"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_plausible.event_subscriber.populate_order_related_properties"
-                 class="Setono\SyliusPlausiblePlugin\EventSubscriber\PopulateOrderRelatedPropertiesSubscriber">
+        <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\PopulateOrderRelatedPropertiesSubscriber">
             <argument type="service" id="sylius.context.cart"/>
 
             <tag name="kernel.event_subscriber"/>

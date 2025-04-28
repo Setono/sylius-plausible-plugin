@@ -4,8 +4,7 @@
     <services>
         <!-- This file includes services specifically for client side tracking -->
 
-        <service id="setono_sylius_plausible.event_subscriber.client_side.library"
-                 class="Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide\LibrarySubscriber">
+        <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide\LibrarySubscriber">
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="setono_tag_bag.tag_bag"/>
             <argument>%setono_sylius_plausible.client_side.script%</argument>
@@ -14,16 +13,15 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="setono_sylius_plausible.message_event_handler.client_side"
-                 class="Setono\SyliusPlausiblePlugin\Message\EventHandler\ClientSideEventHandler">
+        <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide\EventSubscriber">
+            <argument type="service" id="serializer"/>
             <argument type="service" id="setono_tag_bag.tag_bag"/>
-            <argument type="service" id="event_dispatcher"/>
 
             <call method="setLogger">
                 <argument type="service" id="logger" on-invalid="ignore"/>
             </call>
 
-            <tag name="messenger.message_handler" priority="100"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
     </services>
 </container>
