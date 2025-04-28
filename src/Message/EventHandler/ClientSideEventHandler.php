@@ -8,7 +8,6 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
-use Setono\SyliusPlausiblePlugin\Event\Plausible\Events;
 use Setono\TagBag\Tag\InlineScriptTag;
 use Setono\TagBag\TagBagInterface;
 
@@ -36,20 +35,7 @@ final class ClientSideEventHandler implements LoggerAwareInterface
             return;
         }
 
-        $tag = InlineScriptTag::create('{}' === $json ? sprintf('plausible("%s");', $event->getName()) : sprintf('plausible("%s", %s);', $event->getName(), $json));
-
-        if ($event->getName() === Events::PAGEVIEW) {
-            $tag = $tag
-                // make sure the pageview event is sent before other events
-                ->withPriority(5)
-                // the default pageview event is triggered on the request event, but if you have data you want to add to
-                // the pageview event in the controller you can trigger it there instead
-                // and set the fingerprint to 'plausible-pageview' with a priority higher than 5
-                ->withFingerprint('plausible-pageview')
-            ;
-        }
-
-        $this->tagBag->add($tag);
+        $this->tagBag->add(InlineScriptTag::create('{}' === $json ? sprintf('plausible("%s");', $event->getName()) : sprintf('plausible("%s", %s);', $event->getName(), $json)));
     }
 
     public function setLogger(LoggerInterface $logger): void

@@ -6,7 +6,6 @@ namespace Setono\SyliusPlausiblePlugin\EventSubscriber;
 
 use Setono\SyliusPlausiblePlugin\Event\AlterEvent;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
-use Setono\SyliusPlausiblePlugin\Event\Plausible\Events;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Order\Context\CartNotFoundException;
@@ -27,10 +26,6 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
 
     public function populate(AlterEvent $event): void
     {
-        if ($event->event->getName() === Events::PAGEVIEW) {
-            return;
-        }
-
         try {
             $order = $this->cartContext->getCart();
         } catch (CartNotFoundException) {
