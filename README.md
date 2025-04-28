@@ -10,7 +10,7 @@ Use [Plausible Analytics](https://plausible.io) to track visitors and events in 
 
 ## Installation
 
-### Step 1: Install and enable plugin
+### Step 1: Install and enable the plugin
 
 ```bash
 composer require setono/sylius-plausible-plugin
@@ -27,7 +27,7 @@ If you have created your website in the Plausible dashboard, the plugin will jus
 Plausible use different scripts to enable functionality. Plausible calls them script extensions, and you can read
 about them [here](https://plausible.io/docs/script-extensions).
 
-To use a script extension, you need configure the script in the plugin as follows:
+To use a script extension, you need to configure the script in the plugin as follows:
 
 ```yaml
 setono_sylius_plausible:
