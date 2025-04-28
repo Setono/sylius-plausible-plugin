@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\EventSubscriber;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Events;
+use function Setono\SyliusPlausiblePlugin\formatMoney;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Repository\OrderRepositoryInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 final class PurchaseSubscriber extends AbstractEventSubscriber
 {
     public function __construct(
-        MessageBusInterface $eventBus,
+        EventDispatcherInterface $eventDispatcher,
         private readonly OrderRepositoryInterface $orderRepository,
     ) {
-        parent::__construct($eventBus);
+        parent::__construct($eventDispatcher);
     }
 
     public static function getSubscribedEvents(): array
@@ -52,9 +53,9 @@ final class PurchaseSubscriber extends AbstractEventSubscriber
                 return;
             }
 
-            $this->eventBus->dispatch(
+            $this->eventDispatcher->dispatch(
                 (new Event(Events::PURCHASE))
-                    ->setRevenue((string) $order->getCurrencyCode(), self::formatAmount($order->getTotal())),
+                    ->setRevenue((string) $order->getCurrencyCode(), formatMoney($order->getTotal())),
             );
         } catch (\Throwable $e) {
             $this->log(Events::PURCHASE, $e);

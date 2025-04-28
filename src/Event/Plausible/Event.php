@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\Event\Plausible;
 
-class Event implements \JsonSerializable
+final class Event
 {
-    private bool $clientSide = true;
-
     private Properties $properties;
 
     private ?Revenue $revenue = null;
@@ -61,48 +59,5 @@ class Event implements \JsonSerializable
         $this->revenue = new Revenue($currency, $amount);
 
         return $this;
-    }
-
-    public function clientSide(): static
-    {
-        $this->clientSide = true;
-
-        return $this;
-    }
-
-    public function isClientSide(): bool
-    {
-        return $this->clientSide;
-    }
-
-    public function serverSide(): static
-    {
-        $this->clientSide = false;
-
-        return $this;
-    }
-
-    public function isServerSide(): bool
-    {
-        return !$this->clientSide;
-    }
-
-    public function jsonSerialize(): array
-    {
-        $data = [];
-
-        if (null !== $this->revenue) {
-            $data['revenue'] = $this->revenue;
-        }
-
-        if (!$this->properties->isEmpty()) {
-            $data['props'] = $this->properties;
-        }
-
-        if (!$this->clientSide) {
-            $data['name'] = $this->name;
-        }
-
-        return $data;
     }
 }

@@ -19,7 +19,7 @@ final class SelectShippingMethodSubscriber extends AbstractEventSubscriber
     public function track(): void
     {
         try {
-            $this->eventBus->dispatch(new Event(Events::SELECT_SHIPPING_METHOD));
+            $this->eventDispatcher->dispatch(new Event(Events::SELECT_SHIPPING_METHOD));
         } catch (\Throwable $e) {
             $this->log(Events::SELECT_SHIPPING_METHOD, $e);
         }

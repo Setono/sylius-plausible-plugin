@@ -7,10 +7,9 @@ namespace Setono\SyliusPlausiblePlugin\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-final class SetonoSyliusPlausibleExtension extends Extension implements PrependExtensionInterface
+final class SetonoSyliusPlausibleExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
@@ -30,20 +29,5 @@ final class SetonoSyliusPlausibleExtension extends Extension implements PrependE
         }
 
         $loader->load('services.xml');
-    }
-
-    public function prepend(ContainerBuilder $container): void
-    {
-        $container->prependExtensionConfig('framework', [
-            'messenger' => [
-                'buses' => [
-                    'setono_sylius_plausible.event_bus' => [
-                        'middleware' => [
-                            'setono_sylius_plausible.message.middleware.alter',
-                        ],
-                    ],
-                ],
-            ],
-        ]);
     }
 }

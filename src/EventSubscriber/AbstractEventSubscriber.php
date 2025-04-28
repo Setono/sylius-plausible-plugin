@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\EventSubscriber;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 abstract class AbstractEventSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
     protected LoggerInterface $logger;
 
-    public function __construct(protected readonly MessageBusInterface $eventBus)
+    public function __construct(protected readonly EventDispatcherInterface $eventDispatcher)
     {
         $this->logger = new NullLogger();
     }
@@ -31,10 +31,5 @@ abstract class AbstractEventSubscriber implements EventSubscriberInterface, Logg
             $event,
             $e->getMessage(),
         ));
-    }
-
-    protected static function formatAmount(int $amount): float
-    {
-        return round($amount / 100, 2);
     }
 }

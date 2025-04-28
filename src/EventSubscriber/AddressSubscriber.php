@@ -19,7 +19,7 @@ final class AddressSubscriber extends AbstractEventSubscriber
     public function track(): void
     {
         try {
-            $this->eventBus->dispatch(new Event(Events::ADDRESS));
+            $this->eventDispatcher->dispatch(new Event(Events::ADDRESS));
         } catch (\Throwable $e) {
             $this->log(Events::ADDRESS, $e);
         }
