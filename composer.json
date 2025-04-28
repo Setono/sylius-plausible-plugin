@@ -40,6 +40,7 @@
         "phpunit/phpunit": "^9.6",
         "psalm/plugin-phpunit": "^0.18",
         "setono/code-quality-pack": "^2.9",
+        "shipmonk/composer-dependency-analyser": "^1.8.2",
         "sylius/sylius": "~1.12.13",
         "symfony/debug-bundle": "^5.4 || ^6.0",
         "symfony/dotenv": "^5.4 || ^6.0",
