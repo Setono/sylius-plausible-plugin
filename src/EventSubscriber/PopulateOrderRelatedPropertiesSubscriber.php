@@ -47,6 +47,8 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
         $event->event
             ->setProperty('order_id', $orderId)
             ->setProperty('order_number', $order->getNumber())
+            ->setProperty('order_total', $order->getTotal())
+            ->setProperty('tax_total', $order->getTaxTotal())
             ->setProperty('shipping_total', $order->getShippingTotal())
             ->setProperty('order_promotion_total', $order->getOrderPromotionTotal())
             ->setProperty('payment_method', $order->getLastPayment()?->getMethod()?->getCode())
