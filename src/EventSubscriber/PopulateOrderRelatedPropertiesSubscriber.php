@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Setono\SyliusPlausiblePlugin\EventSubscriber;
 
 use Setono\SyliusPlausiblePlugin\Event\AlterEvent;
-use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Order\Context\CartNotFoundException;
+use Sylius\Component\Shipping\Model\ShipmentInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberInterface
@@ -52,24 +52,18 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
             ->setProperty('shipping_total', $order->getShippingTotal())
             ->setProperty('order_promotion_total', $order->getOrderPromotionTotal())
             ->setProperty('payment_method', $order->getLastPayment()?->getMethod()?->getCode())
+            ->setProperty('shipping_method', self::getLastShipment($order)?->getMethod()?->getCode())
             ->setProperty('coupon_code', $order->getPromotionCoupon()?->getCode())
         ;
-
-        self::populateShippingMethod($order, $event->event);
     }
 
-    private static function populateShippingMethod(OrderInterface $order, Event $event): void
+    private static function getLastShipment(OrderInterface $order): ?ShipmentInterface
     {
-        $shippingMethodCode = null;
-        foreach ($order->getShipments() as $shipment) {
-            $shippingMethod = $shipment->getMethod();
-            if (null === $shippingMethod) {
-                continue;
-            }
-
-            $shippingMethodCode = $shippingMethod->getCode();
+        $lastShipment = $order->getShipments()->last();
+        if (!$lastShipment instanceof ShipmentInterface) {
+            return null;
         }
 
-        $event->setProperty('shipping_method', $shippingMethodCode);
+        return $lastShipment;
     }
 }
