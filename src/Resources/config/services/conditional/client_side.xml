@@ -13,7 +13,7 @@
         </service>
 
         <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide\EventSubscriber">
-            <argument type="service" id="serializer"/>
+            <argument type="service" id="Setono\SyliusPlausiblePlugin\Serializer\EventSerializerInterface"/>
             <argument type="service" id="setono_tag_bag.tag_bag"/>
 
             <call method="setLogger">

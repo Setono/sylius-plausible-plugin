@@ -8,20 +8,17 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
+use Setono\SyliusPlausiblePlugin\Serializer\EventSerializerInterface;
 use Setono\TagBag\Tag\InlineScriptTag;
 use Setono\TagBag\TagBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncode;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
-use Symfony\Component\Serializer\SerializerInterface;
 
 final class EventSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
     private LoggerInterface $logger;
 
     public function __construct(
-        private readonly SerializerInterface $serializer,
+        private readonly EventSerializerInterface $serializer,
         private readonly TagBagInterface $tagBag,
     ) {
         $this->logger = new NullLogger();
@@ -37,11 +34,7 @@ final class EventSubscriber implements EventSubscriberInterface, LoggerAwareInte
     public function add(Event $event): void
     {
         try {
-            $json = $this->serializer->serialize($event, 'json', [
-                JsonEncode::OPTIONS => \JSON_FORCE_OBJECT,
-                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
-                AbstractNormalizer::GROUPS => ['client_side'],
-            ]);
+            $json = $this->serializer->serialize($event, EventSerializerInterface::CONTEXT_CLIENT_SIDE);
         } catch (\Throwable $e) {
             $this->logger->error('Could not encode event to json', [
                 'event' => $event,
