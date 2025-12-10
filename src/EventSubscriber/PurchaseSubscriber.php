@@ -15,6 +15,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 final class PurchaseSubscriber extends AbstractEventSubscriber
 {
+    /**
+     * @param OrderRepositoryInterface<OrderInterface> $orderRepository
+     */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         private readonly OrderRepositoryInterface $orderRepository,

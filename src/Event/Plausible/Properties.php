@@ -29,9 +29,6 @@ final class Properties implements \Countable, \JsonSerializable, \IteratorAggreg
         return $this;
     }
 
-    /**
-     * @phpstan-assert-if-true mixed $this->properties[$name]
-     */
     public function has(string $name): bool
     {
         return array_key_exists($name, $this->properties);
@@ -47,14 +44,14 @@ final class Properties implements \Countable, \JsonSerializable, \IteratorAggreg
         return count($this->properties);
     }
 
+    /**
+     * @return \ArrayIterator<string, mixed>
+     */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->properties);
     }
 
-    /**
-     * @phpstan-assert non-empty-string $offset
-     */
     public function offsetExists(mixed $offset): bool
     {
         self::assertOffset($offset);
@@ -83,6 +80,9 @@ final class Properties implements \Countable, \JsonSerializable, \IteratorAggreg
         unset($this->properties[$offset]);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function jsonSerialize(): array
     {
         return array_filter($this->properties, static fn (mixed $value): bool => null !== $value && '' !== $value);
