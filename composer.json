@@ -29,17 +29,18 @@
     "require-dev": {
         "api-platform/core": "^2.7.16",
         "babdev/pagerfanta-bundle": "^3.8",
-        "behat/behat": "^3.13",
+        "behat/behat": "^3.14",
         "doctrine/doctrine-bundle": "^2.11",
         "jms/serializer-bundle": "^4.2",
-        "lexik/jwt-authentication-bundle": "^2.16",
-        "setono/sylius-plugin-pack": "^1.12",
+        "lexik/jwt-authentication-bundle": "^2.17",
+        "setono/sylius-plugin-pack": "~1.14.1",
+        "sylius-labs/polyfill-symfony-security": "^1.1.2",
         "symfony/debug-bundle": "^5.4 || ^6.4 || ^7.0",
         "symfony/dotenv": "^5.4 || ^6.4 || ^7.0",
         "symfony/intl": "^5.4 || ^6.4 || ^7.0",
         "symfony/property-info": "^5.4 || ^6.4 || ^7.0",
         "symfony/web-profiler-bundle": "^5.4 || ^6.4 || ^7.0",
-        "symfony/webpack-encore-bundle": "^1.17",
+        "symfony/webpack-encore-bundle": "^1.17.2",
         "willdurand/negotiation": "^3.1"
     },
     "prefer-stable": true,
@@ -53,7 +54,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Setono\\SyliusPlausiblePlugin\\": "tests/"
+            "Setono\\SyliusPlausiblePlugin\\Tests\\": "tests/"
         },
         "classmap": [
             "tests/Application/Kernel.php"
@@ -64,12 +65,13 @@
             "dealerdirect/phpcodesniffer-composer-installer": false,
             "ergebnis/composer-normalize": true,
             "infection/extension-installer": true,
+            "phpstan/extension-installer": true,
             "symfony/thanks": false
         },
         "sort-packages": true
     },
     "scripts": {
-        "analyse": "psalm",
+        "analyse": "phpstan analyse",
         "check-style": "ecs check",
         "fix-style": "ecs check --fix",
         "phpunit": "phpunit"

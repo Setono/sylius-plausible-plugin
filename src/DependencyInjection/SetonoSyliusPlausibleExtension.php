@@ -14,8 +14,6 @@ final class SetonoSyliusPlausibleExtension extends Extension
     public function load(array $configs, ContainerBuilder $container): void
     {
         /**
-         * @psalm-suppress PossiblyNullArgument
-         *
          * @var array{client_side: array{enabled: bool, script: string}, domain: string} $config
          */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);

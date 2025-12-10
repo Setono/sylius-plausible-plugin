@@ -37,16 +37,13 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
             return;
         }
 
-        /** @var mixed $orderId */
-        $orderId = $order->getId();
-
         // if the order id is null it means that the order has not been persisted yet
-        if (null === $orderId) {
+        if ($order->getId() === null) {
             return;
         }
 
         $event
-            ->setProperty('order_id', $orderId)
+            ->setProperty('order_id', $order->getId())
             ->setProperty('order_number', $order->getNumber())
             ->setProperty('order_total', formatMoney($order->getTotal()))
             ->setProperty('tax_total', formatMoney($order->getTaxTotal()))

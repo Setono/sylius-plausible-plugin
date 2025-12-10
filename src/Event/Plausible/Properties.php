@@ -30,7 +30,7 @@ final class Properties implements \Countable, \JsonSerializable, \IteratorAggreg
     }
 
     /**
-     * @psalm-assert-if-true mixed $this->properties[$name]
+     * @phpstan-assert-if-true mixed $this->properties[$name]
      */
     public function has(string $name): bool
     {
@@ -53,7 +53,7 @@ final class Properties implements \Countable, \JsonSerializable, \IteratorAggreg
     }
 
     /**
-     * @psalm-assert non-empty-string $offset
+     * @phpstan-assert non-empty-string $offset
      */
     public function offsetExists(mixed $offset): bool
     {
@@ -89,7 +89,7 @@ final class Properties implements \Countable, \JsonSerializable, \IteratorAggreg
     }
 
     /**
-     * @psalm-assert non-empty-string $offset
+     * @phpstan-assert non-empty-string $offset
      */
     private static function assertOffset(mixed $offset): void
     {

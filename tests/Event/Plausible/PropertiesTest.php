@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusPlausiblePlugin\Event\Plausible;
+namespace Setono\SyliusPlausiblePlugin\Tests\Event\Plausible;
 
 use PHPUnit\Framework\TestCase;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Properties;

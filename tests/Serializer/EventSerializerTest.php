@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusPlausiblePlugin\Serializer;
+namespace Setono\SyliusPlausiblePlugin\Tests\Serializer;
 
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Events;
