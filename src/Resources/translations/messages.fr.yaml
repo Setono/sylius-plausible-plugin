@@ -1,0 +1,18 @@
+setono_sylius_plausible:
+    ui:
+        plausible: Plausible
+        plausible_analytics: Plausible Analytics
+        manage_plausible_scripts_per_channel: Gérer les scripts Plausible pour chaque canal
+        configure_plausible_script: Configurer le script Plausible
+        plausible_status: Statut Plausible
+        configure: Configurer
+        configured: Configuré
+        not_configured: Non configuré
+        script_format_help_title: Formats acceptés
+        script_format_help_description: 'Vous pouvez saisir le script Plausible dans l''un des formats suivants :'
+        script_format_identifier: 'Identifiant seul : pa-hb0WlWkUb5U3qhSS-vd-a'
+        script_format_url: 'URL complète : https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js'
+        script_format_html: 'Extrait HTML : <script async src="https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js"></script>'
+    form:
+        channel:
+            plausible_script_identifier: Script Plausible

@@ -1,0 +1,3 @@
+setono_sylius_plausible:
+    plausible_script:
+        invalid: Denne værdi er ikke en gyldig Plausible script identifikator, URL eller HTML snippet.

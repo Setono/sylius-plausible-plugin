@@ -1,0 +1,3 @@
+setono_sylius_plausible_admin:
+    resource: "@SetonoSyliusPlausiblePlugin/Resources/config/routes/admin.yaml"
+    prefix: /admin

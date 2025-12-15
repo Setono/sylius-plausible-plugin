@@ -1,0 +1,20 @@
+{{ form_errors(form) }}
+<div class="ui two column stackable grid">
+    <div class="column">
+        <div class="ui segment">
+            {{ form_row(form.plausibleScriptIdentifier) }}
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="ui segment">
+            <h4 class="ui header">{{ 'setono_sylius_plausible.ui.script_format_help_title'|trans }}</h4>
+            <p>{{ 'setono_sylius_plausible.ui.script_format_help_description'|trans }}</p>
+            <ul class="list">
+                <li>{{ 'setono_sylius_plausible.ui.script_format_identifier'|trans }}</li>
+                <li>{{ 'setono_sylius_plausible.ui.script_format_url'|trans }}</li>
+                <li>{{ 'setono_sylius_plausible.ui.script_format_html'|trans }}</li>
+            </ul>
+        </div>
+    </div>
+</div>

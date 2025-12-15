@@ -1,0 +1,31 @@
+setono_sylius_plausible_admin_channel_index:
+    path: /plausible
+    methods: [GET]
+    defaults:
+        _controller: sylius.controller.channel::indexAction
+        _sylius:
+            grid: setono_sylius_plausible_admin_channel
+            template: "@SyliusAdmin/Crud/index.html.twig"
+            vars:
+                icon: chart line
+                title: setono_sylius_plausible.ui.plausible_analytics
+                subheader: setono_sylius_plausible.ui.manage_plausible_scripts_per_channel
+
+setono_sylius_plausible_admin_channel_update:
+    path: /plausible/{id}/edit
+    methods: [GET, PUT]
+    defaults:
+        _controller: sylius.controller.channel::updateAction
+        _sylius:
+            template: "@SyliusAdmin/Crud/update.html.twig"
+            section: admin
+            form: Setono\SyliusPlausiblePlugin\Form\Type\ChannelPlausibleType
+            redirect: setono_sylius_plausible_admin_channel_index
+            vars:
+                route:
+                    name: setono_sylius_plausible_admin_channel_update
+                index:
+                    route:
+                        name: setono_sylius_plausible_admin_channel_index
+                templates:
+                    form: "@SetonoSyliusPlausiblePlugin/admin/channel/_form.html.twig"

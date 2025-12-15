@@ -1,0 +1,18 @@
+setono_sylius_plausible:
+    ui:
+        plausible: Plausible
+        plausible_analytics: Plausible Analytics
+        manage_plausible_scripts_per_channel: Hantera Plausible-skript för varje kanal
+        configure_plausible_script: Konfigurera Plausible-skript
+        plausible_status: Plausible-status
+        configure: Konfigurera
+        configured: Konfigurerad
+        not_configured: Inte konfigurerad
+        script_format_help_title: Accepterade format
+        script_format_help_description: 'Du kan ange Plausible-skriptet i något av följande format:'
+        script_format_identifier: 'Endast identifierare: pa-hb0WlWkUb5U3qhSS-vd-a'
+        script_format_url: 'Fullständig URL: https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js'
+        script_format_html: 'HTML-snippet: <script async src="https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js"></script>'
+    form:
+        channel:
+            plausible_script_identifier: Plausible-skript

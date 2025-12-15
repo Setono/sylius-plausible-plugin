@@ -1,0 +1,2 @@
+setono_sylius_plausible:
+    resource: "@SetonoSyliusPlausiblePlugin/Resources/config/routes.yaml"

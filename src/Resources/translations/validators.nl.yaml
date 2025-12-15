@@ -1,0 +1,3 @@
+setono_sylius_plausible:
+    plausible_script:
+        invalid: Deze waarde is geen geldige Plausible script identificatie, URL of HTML-snippet.

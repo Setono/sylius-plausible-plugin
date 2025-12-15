@@ -1,0 +1,11 @@
+{% if data.plausibleScriptIdentifier is defined and data.plausibleScriptIdentifier %}
+    <span class="ui green label">
+        <i class="checkmark icon"></i>
+        {{ 'setono_sylius_plausible.ui.configured'|trans }}
+    </span>
+{% else %}
+    <span class="ui label">
+        <i class="times icon"></i>
+        {{ 'setono_sylius_plausible.ui.not_configured'|trans }}
+    </span>
+{% endif %}

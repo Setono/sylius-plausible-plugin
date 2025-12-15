@@ -1,4 +1,3 @@
 setono_sylius_plausible:
     client_side:
-        script: 'https://plausible.io/js/script.local.pageview-props.revenue.js'
-    domain: 'setono.com'
+        enabled: true
