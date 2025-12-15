@@ -1,0 +1,3 @@
+setono_sylius_plausible:
+    plausible_script:
+        invalid: Ta wartość nie jest prawidłowym identyfikatorem skryptu Plausible, URL ani fragmentem HTML.

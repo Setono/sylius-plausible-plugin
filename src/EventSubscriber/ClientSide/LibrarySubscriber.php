@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide;
 
+use Setono\SyliusPlausiblePlugin\Model\ChannelInterface;
 use Setono\TagBag\Tag\InlineScriptTag;
 use Setono\TagBag\Tag\ScriptTag;
 use Setono\TagBag\Tag\TagInterface;
 use Setono\TagBag\TagBagInterface;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Channel\Context\ChannelNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use function Symfony\Component\String\u;
 
 final class LibrarySubscriber implements EventSubscriberInterface
 {
@@ -19,8 +21,7 @@ final class LibrarySubscriber implements EventSubscriberInterface
 
     public function __construct(
         private readonly TagBagInterface $tagBag,
-        private readonly string $script,
-        private readonly ?string $domain,
+        private readonly ChannelContextInterface $channelContext,
     ) {
     }
 
@@ -42,20 +43,32 @@ final class LibrarySubscriber implements EventSubscriberInterface
             return;
         }
 
+        try {
+            $channel = $this->channelContext->getChannel();
+        } catch (ChannelNotFoundException) {
+            return;
+        }
+
+        if (!$channel instanceof ChannelInterface) {
+            return;
+        }
+
+        $identifier = $channel->getPlausibleScriptIdentifier();
+        if (null === $identifier || '' === $identifier) {
+            return;
+        }
+
         $this->tagBag->add(
-            InlineScriptTag::create('window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }')
-                ->withPriority(100)
-                ->withSection(TagInterface::SECTION_HEAD),
+            ScriptTag::create(sprintf('https://plausible.io/js/%s.js', $identifier))
+                ->async()
+                ->withSection(TagInterface::SECTION_HEAD)
+                ->withFingerprint(self::TAG_FINGERPRINT),
         );
 
-        $domain = $this->domain ?? u($event->getRequest()->getHost())->trimPrefix('www.')->toString();
-
         $this->tagBag->add(
-            ScriptTag::create($this->script)
-            ->defer()
-            ->withSection(TagInterface::SECTION_HEAD)
-            ->withAttribute('data-domain', $domain)
-            ->withFingerprint(self::TAG_FINGERPRINT),
+            InlineScriptTag::create('window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()')
+                ->withPriority(99)
+                ->withSection(TagInterface::SECTION_HEAD),
         );
     }
 }

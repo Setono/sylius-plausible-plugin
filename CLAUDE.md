@@ -115,13 +115,15 @@ Located in `src/Event/Plausible/`:
 - `Properties` - Key-value pairs for event properties
 - `Revenue` - Revenue data with currency and amount
 
-### Configuration
+### Translations
+The plugin provides multilingual support through translation files in `src/Resources/translations/`:
 
-Bundle configuration under `setono_sylius_plausible`:
-- `client_side.enabled` - Enable/disable tracking
-- `client_side.script` - Plausible script URL (supports script extensions)
-- `domain` - Override domain for testing
+- **Translation Files**: Available in 10 languages (en, da, de, es, fr, it, nl, no, pl, sv)
+- **Translation Domains**:
+  - `messages.*` - General UI translations
+  - `flashes.*` - Flash message translations (success/error messages)
 
-## PHP Version
-
-Minimum PHP 8.1. Rector is configured for PHP 8.1 level upgrades.
+Key translation keys:
+- `setono_sylius_plausible.ui.*` - UI labels
+- `setono_sylius_plausible.form.*` - Form field labels
+- `setono_sylius_plausible.single_message` - A flash message

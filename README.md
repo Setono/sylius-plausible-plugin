@@ -16,39 +16,48 @@ Use [Plausible Analytics](https://plausible.io) to track visitors and events in 
 composer require setono/sylius-plausible-plugin
 ```
 
+### Step 2: Add the Plausible script identifier trait to your Channel entity
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity\Channel;
+
+use Doctrine\ORM\Mapping as ORM;
+use Setono\SyliusPlausiblePlugin\Model\ChannelInterface as PlausibleChannelInterface;
+use Setono\SyliusPlausiblePlugin\Model\ChannelPlausibleAwareTrait;
+use Sylius\Component\Core\Model\Channel as BaseChannel;
+
+#[ORM\Entity]
+#[ORM\Table(name: 'sylius_channel')]
+class Channel extends BaseChannel implements PlausibleChannelInterface
+{
+    use ChannelPlausibleAwareTrait;
+}
+```
+
+### Step 3: Update your database schema
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
+```
+
 ## Usage
 
-If you have created your website in the Plausible dashboard, the plugin will just work out of the box. Enjoy 🎉
+### Configure Plausible per channel
 
-## Configuration
+Navigate to **Marketing > Plausible** in the admin panel to configure the Plausible script for each channel.
 
-### Add functionality
+You can enter the Plausible script in any of the following formats:
 
-Plausible use different scripts to enable functionality. Plausible calls them script extensions, and you can read
-about them [here](https://plausible.io/docs/script-extensions).
+- **Identifier only**: `pa-hb0WlWkUb5U3qhSS-vd-a`
+- **Full URL**: `https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js`
+- **HTML snippet**: `<script async src="https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js"></script>`
 
-To use a script extension, you need to configure the script in the plugin as follows:
-
-```yaml
-setono_sylius_plausible:
-    client_side:
-        script: "https://plausible.io/js/script.manual.revenue.file-downloads.js"
-``` 
-
-Here I have added the 'file downloads' extension. Notice that I am keeping both the 'manual' and 'revenue' extensions.
-This is because the 'revenue' extension is used for tracking purchases, and the 'manual' extension is used for manual
-tracking of the pageview event.
-
-### Test tracking
-
-If you want to test the plugin in your local environment, you can input the domain and use the local script extension:
-
-```yaml
-setono_sylius_plausible:
-    client_side:
-        script: "https://plausible.io/js/script.manual.revenue.local.js"
-    domain: "your-domain.com"
-``` 
+The plugin will normalize any of these formats and output the correct script tag on your storefront.
 
 [ico-version]: https://poser.pugx.org/setono/sylius-plausible-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-plausible-plugin/license

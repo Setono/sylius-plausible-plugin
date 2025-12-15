@@ -6,7 +6,7 @@ parameters:
         - tests
 
     excludePaths:
-        - tests/Application/*
+        - tests/Application
 
     bootstrapFiles:
         - vendor/autoload.php
@@ -22,3 +22,8 @@ parameters:
 
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false
+
+    ignoreErrors:
+        -
+            identifier: trait.unused
+            path: src/Model
