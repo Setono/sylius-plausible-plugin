@@ -4,16 +4,8 @@
             xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping https://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
 >
     <class name="Setono\SyliusPlausiblePlugin\Event\Plausible\Event">
-        <attribute name="name">
-            <group>server_side</group>
-        </attribute>
-        <attribute name="properties" serialized-name="props">
-            <group>client_side</group>
-            <group>server_side</group>
-        </attribute>
-        <attribute name="revenue">
-            <group>client_side</group>
-            <group>server_side</group>
-        </attribute>
+        <attribute name="name" ignore="true"/>
+        <attribute name="properties" serialized-name="props"/>
+        <attribute name="revenue"/>
     </class>
 </serializer>

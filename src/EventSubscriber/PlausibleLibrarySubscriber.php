@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide;
+namespace Setono\SyliusPlausiblePlugin\EventSubscriber;
 
 use Setono\SyliusPlausiblePlugin\Model\ChannelInterface;
 use Setono\TagBag\Tag\InlineScriptTag;
@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-final class LibrarySubscriber implements EventSubscriberInterface
+final class PlausibleLibrarySubscriber implements EventSubscriberInterface
 {
     final public const TAG_FINGERPRINT = 'plausible-library';
 

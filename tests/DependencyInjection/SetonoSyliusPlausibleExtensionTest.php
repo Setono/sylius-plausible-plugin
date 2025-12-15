@@ -7,6 +7,7 @@ namespace Setono\SyliusPlausiblePlugin\Tests\DependencyInjection;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Setono\SyliusPlausiblePlugin\DependencyInjection\SetonoSyliusPlausibleExtension;
 use Setono\SyliusPlausiblePlugin\EventSubscriber\AdminMenuSubscriber;
+use Setono\SyliusPlausiblePlugin\EventSubscriber\PlausibleLibrarySubscriber;
 use Setono\SyliusPlausiblePlugin\Form\Type\ChannelPlausibleType;
 
 /**
@@ -44,20 +45,10 @@ final class SetonoSyliusPlausibleExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
-    public function it_loads_client_side_services_by_default(): void
+    public function it_registers_plausible_library_subscriber_service(): void
     {
         $this->load();
 
-        $this->assertContainerBuilderHasService(\Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide\LibrarySubscriber::class);
-    }
-
-    /**
-     * @test
-     */
-    public function it_does_not_load_client_side_services_when_disabled(): void
-    {
-        $this->load(['client_side' => ['enabled' => false]]);
-
-        $this->assertContainerBuilderNotHasService(\Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide\LibrarySubscriber::class);
+        $this->assertContainerBuilderHasService(PlausibleLibrarySubscriber::class);
     }
 }
