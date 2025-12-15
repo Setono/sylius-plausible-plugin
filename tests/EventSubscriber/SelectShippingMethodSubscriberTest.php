@@ -32,9 +32,7 @@ final class SelectShippingMethodSubscriberTest extends TestCase
     public function it_dispatches_select_shipping_method_event(): void
     {
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        $eventDispatcher->dispatch(\Prophecy\Argument::that(function ($event) {
-            return $event instanceof Event && $event->getName() === Events::SELECT_SHIPPING_METHOD;
-        }))->shouldBeCalled();
+        $eventDispatcher->dispatch(\Prophecy\Argument::that(fn ($event) => $event instanceof Event && $event->getName() === Events::SELECT_SHIPPING_METHOD))->shouldBeCalled();
 
         $subscriber = new SelectShippingMethodSubscriber($eventDispatcher->reveal());
         $subscriber->track();

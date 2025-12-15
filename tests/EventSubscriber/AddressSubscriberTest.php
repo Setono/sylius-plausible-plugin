@@ -32,9 +32,7 @@ final class AddressSubscriberTest extends TestCase
     public function it_dispatches_address_event(): void
     {
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        $eventDispatcher->dispatch(\Prophecy\Argument::that(function ($event) {
-            return $event instanceof Event && $event->getName() === Events::ADDRESS;
-        }))->shouldBeCalled();
+        $eventDispatcher->dispatch(\Prophecy\Argument::that(fn ($event) => $event instanceof Event && $event->getName() === Events::ADDRESS))->shouldBeCalled();
 
         $subscriber = new AddressSubscriber($eventDispatcher->reveal());
         $subscriber->track();

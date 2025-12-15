@@ -47,15 +47,11 @@ final class LibrarySubscriberTest extends TestCase
         $channelContext->getChannel()->willReturn($channel->reveal());
 
         $tagBag = $this->prophesize(TagBagInterface::class);
-        $tagBag->add(Argument::that(function ($tag) {
-            return $tag instanceof ScriptTag &&
-                null !== $tag->getSrc() &&
-                str_contains($tag->getSrc(), 'https://plausible.io/js/pa-test123.js');
-        }))->shouldBeCalled();
-        $tagBag->add(Argument::that(function ($tag) {
-            return $tag instanceof InlineScriptTag &&
-                str_contains($tag->getContent(), 'window.plausible');
-        }))->shouldBeCalled();
+        $tagBag->add(Argument::that(fn ($tag) => $tag instanceof ScriptTag &&
+            null !== $tag->getSrc() &&
+            str_contains($tag->getSrc(), 'https://plausible.io/js/pa-test123.js')))->shouldBeCalled();
+        $tagBag->add(Argument::that(fn ($tag) => $tag instanceof InlineScriptTag &&
+            str_contains($tag->getContent(), 'window.plausible')))->shouldBeCalled();
 
         $request = new Request();
         $request->headers->set('Accept', 'text/html');

@@ -32,9 +32,7 @@ final class SelectPaymentMethodSubscriberTest extends TestCase
     public function it_dispatches_select_payment_method_event(): void
     {
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        $eventDispatcher->dispatch(\Prophecy\Argument::that(function ($event) {
-            return $event instanceof Event && $event->getName() === Events::SELECT_PAYMENT_METHOD;
-        }))->shouldBeCalled();
+        $eventDispatcher->dispatch(\Prophecy\Argument::that(fn ($event) => $event instanceof Event && $event->getName() === Events::SELECT_PAYMENT_METHOD))->shouldBeCalled();
 
         $subscriber = new SelectPaymentMethodSubscriber($eventDispatcher->reveal());
         $subscriber->track();

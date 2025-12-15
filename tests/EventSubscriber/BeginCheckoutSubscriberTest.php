@@ -36,9 +36,7 @@ final class BeginCheckoutSubscriberTest extends TestCase
     public function it_dispatches_begin_checkout_event_on_checkout_start_route(): void
     {
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        $eventDispatcher->dispatch(\Prophecy\Argument::that(function ($event) {
-            return $event instanceof Event && $event->getName() === Events::BEGIN_CHECKOUT;
-        }))->shouldBeCalled();
+        $eventDispatcher->dispatch(\Prophecy\Argument::that(fn ($event) => $event instanceof Event && $event->getName() === Events::BEGIN_CHECKOUT))->shouldBeCalled();
 
         $request = new Request();
         $request->attributes->set('_route', 'sylius_shop_checkout_start');
