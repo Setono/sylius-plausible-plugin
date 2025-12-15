@@ -62,10 +62,10 @@ The plugin will normalize any of these formats and output the correct script tag
 [ico-version]: https://poser.pugx.org/setono/sylius-plausible-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-plausible-plugin/license
 [ico-github-actions]: https://github.com/Setono/sylius-plausible-plugin/workflows/build/badge.svg
-[ico-code-coverage]: https://codecov.io/gh/Setono/sylius-plausible-plugin/branch/master/graph/badge.svg
-[ico-infection]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FSetono%2Fsylius-plausible-plugin%2Fmaster
+[ico-code-coverage]: https://codecov.io/gh/Setono/sylius-plausible-plugin/branch/2.x/graph/badge.svg
+[ico-infection]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FSetono%2Fsylius-plausible-plugin%2F2.x
 
 [link-packagist]: https://packagist.org/packages/setono/sylius-plausible-plugin
 [link-github-actions]: https://github.com/Setono/sylius-plausible-plugin/actions
 [link-code-coverage]: https://codecov.io/gh/Setono/sylius-plausible-plugin
-[link-infection]: https://dashboard.stryker-mutator.io/reports/github.com/Setono/sylius-plausible-plugin/master
+[link-infection]: https://dashboard.stryker-mutator.io/reports/github.com/Setono/sylius-plausible-plugin/2.x
