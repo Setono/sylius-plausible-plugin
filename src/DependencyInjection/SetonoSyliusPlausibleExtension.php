@@ -14,17 +14,8 @@ final class SetonoSyliusPlausibleExtension extends Extension implements PrependE
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        /**
-         * @var array{client_side: array{enabled: bool}} $config
-         */
-        $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-
         $loader->load('services.xml');
-
-        if ($config['client_side']['enabled']) {
-            $loader->load('services/conditional/client_side.xml');
-        }
     }
 
     public function prepend(ContainerBuilder $container): void

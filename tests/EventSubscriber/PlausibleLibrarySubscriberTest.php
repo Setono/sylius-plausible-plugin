@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusPlausiblePlugin\Tests\EventSubscriber\ClientSide;
+namespace Setono\SyliusPlausiblePlugin\Tests\EventSubscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide\LibrarySubscriber;
+use Setono\SyliusPlausiblePlugin\EventSubscriber\PlausibleLibrarySubscriber;
 use Setono\SyliusPlausiblePlugin\Model\ChannelInterface;
 use Setono\TagBag\Tag\InlineScriptTag;
 use Setono\TagBag\Tag\ScriptTag;
@@ -21,9 +21,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * @covers \Setono\SyliusPlausiblePlugin\EventSubscriber\ClientSide\LibrarySubscriber
+ * @covers \Setono\SyliusPlausiblePlugin\EventSubscriber\PlausibleLibrarySubscriber
  */
-final class LibrarySubscriberTest extends TestCase
+final class PlausibleLibrarySubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -32,7 +32,7 @@ final class LibrarySubscriberTest extends TestCase
      */
     public function it_subscribes_to_kernel_request_event(): void
     {
-        self::assertArrayHasKey(KernelEvents::REQUEST, LibrarySubscriber::getSubscribedEvents());
+        self::assertArrayHasKey(KernelEvents::REQUEST, PlausibleLibrarySubscriber::getSubscribedEvents());
     }
 
     /**
@@ -59,7 +59,7 @@ final class LibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new LibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
         $subscriber->add($requestEvent);
     }
 
@@ -79,7 +79,7 @@ final class LibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::SUB_REQUEST);
 
-        $subscriber = new LibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
         $subscriber->add($requestEvent);
     }
 
@@ -100,7 +100,7 @@ final class LibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new LibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
         $subscriber->add($requestEvent);
     }
 
@@ -120,7 +120,7 @@ final class LibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new LibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
         $subscriber->add($requestEvent);
     }
 
@@ -141,7 +141,7 @@ final class LibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new LibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
         $subscriber->add($requestEvent);
     }
 
@@ -164,7 +164,7 @@ final class LibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new LibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
         $subscriber->add($requestEvent);
     }
 
@@ -188,7 +188,7 @@ final class LibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new LibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
         $subscriber->add($requestEvent);
     }
 
@@ -212,7 +212,7 @@ final class LibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new LibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
         $subscriber->add($requestEvent);
     }
 }

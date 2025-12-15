@@ -4,13 +4,7 @@
             xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping https://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd"
 >
     <class name="Setono\SyliusPlausiblePlugin\Event\Plausible\Revenue">
-        <attribute name="currency">
-            <group>client_side</group>
-            <group>server_side</group>
-        </attribute>
-        <attribute name="amount">
-            <group>client_side</group>
-            <group>server_side</group>
-        </attribute>
+        <attribute name="currency"/>
+        <attribute name="amount"/>
     </class>
 </serializer>
