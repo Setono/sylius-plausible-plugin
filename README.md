@@ -40,7 +40,15 @@ class Channel extends BaseChannel implements PlausibleChannelInterface
 }
 ```
 
-### Step 3: Update your database schema
+### Step 3: Import routes
+
+```yaml
+# config/routes/setono_sylius_plausible.yaml
+setono_sylius_plausible:
+    resource: "@SetonoSyliusPlausiblePlugin/Resources/config/routes.yaml"
+```
+
+### Step 4: Update your database schema
 
 ```bash
 bin/console doctrine:migrations:diff
