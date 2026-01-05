@@ -5,7 +5,7 @@
 [![License](http://poser.pugx.org/setono/sylius-plausible-plugin/license)](https://packagist.org/packages/setono/sylius-plausible-plugin)
 [![PHP Version Require](http://poser.pugx.org/setono/sylius-plausible-plugin/require/php)](https://packagist.org/packages/setono/sylius-plausible-plugin)
 [![build](https://github.com/Setono/sylius-plausible-plugin/actions/workflows/build.yaml/badge.svg)](https://github.com/Setono/sylius-plausible-plugin/actions/workflows/build.yaml)
-[![codecov](https://codecov.io/gh/Setono/sylius-plausible-plugin/graph/badge.svg?token=ILLJtkQWSV)](https://codecov.io/gh/Setono/sylius-plausible-plugin)
+[![codecov](https://codecov.io/gh/Setono/sylius-plausible-plugin/graph/badge.svg?token=FUAA6YKXTQ)](https://codecov.io/gh/Setono/sylius-plausible-plugin)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FSetono%2Fsylius-plausible-plugin%2F2.x)](https://dashboard.stryker-mutator.io/reports/github.com/Setono/sylius-plausible-plugin/2.x)
 
 Use [Plausible Analytics](https://plausible.io) to track visitors and events in your Sylius store.
