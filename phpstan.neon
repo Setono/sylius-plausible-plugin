@@ -27,3 +27,7 @@ parameters:
         -
             identifier: trait.unused
             path: src/Model
+        -
+            identifier: doctrine.associationType
+        -
+            identifier: doctrine.columnType

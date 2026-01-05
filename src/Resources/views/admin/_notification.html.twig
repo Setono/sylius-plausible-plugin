@@ -1,0 +1,33 @@
+{% if setono_plausible_should_show_notification() %}
+<div id="plausible-notification">
+    <div class="ui warning message">
+        <i class="close icon"></i>
+        <div class="header">
+            <i class="exclamation triangle icon"></i>
+            {{ 'setono_sylius_plausible.ui.notification.title'|trans }}
+        </div>
+        <p>
+            {{ 'setono_sylius_plausible.ui.notification.message'|trans }}
+            <a href="{{ path('setono_sylius_plausible_admin_channel_index') }}">
+                {{ 'setono_sylius_plausible.ui.notification.configure_now'|trans }}
+            </a>
+        </p>
+    </div>
+    <div class="ui hidden divider"></div>
+</div>
+
+<script>
+document.querySelector('#plausible-notification .close').addEventListener('click', function() {
+    fetch('{{ path('setono_sylius_plausible_admin_ajax_dismiss_notification') }}', {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    }).then(function(response) {
+        if (response.ok) {
+            document.querySelector('#plausible-notification').remove();
+        }
+    });
+});
+</script>
+{% endif %}

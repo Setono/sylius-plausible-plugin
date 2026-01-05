@@ -5,9 +5,20 @@ declare(strict_types=1);
 namespace Setono\SyliusPlausiblePlugin;
 
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Sylius\Bundle\ResourceBundle\AbstractResourceBundle;
+use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 
-final class SetonoSyliusPlausiblePlugin extends Bundle
+final class SetonoSyliusPlausiblePlugin extends AbstractResourceBundle
 {
     use SyliusPluginTrait;
+
+    /**
+     * @return list<string>
+     */
+    public function getSupportedDrivers(): array
+    {
+        return [
+            SyliusResourceBundle::DRIVER_DOCTRINE_ORM,
+        ];
+    }
 }

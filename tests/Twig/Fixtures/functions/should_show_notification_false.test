@@ -1,0 +1,9 @@
+--TEST--
+"setono_plausible_should_show_notification" function returns false when checker returns false
+--TEMPLATE--
+{% if setono_plausible_should_show_notification() %}yes{% else %}no{% endif %}
+--DATA--
+Setono\SyliusPlausiblePlugin\Tests\Twig\ExtensionTest::setShouldShowNotification(false);
+return []
+--EXPECT--
+no

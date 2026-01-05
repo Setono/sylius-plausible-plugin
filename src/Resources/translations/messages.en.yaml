@@ -13,6 +13,10 @@ setono_sylius_plausible:
         script_format_identifier: 'Identifier only: pa-hb0WlWkUb5U3qhSS-vd-a'
         script_format_url: 'Full URL: https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js'
         script_format_html: 'HTML snippet: <script async src="https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js"></script>'
+        notification:
+            title: Plausible not fully configured
+            message: Not all channels have Plausible configured. Tracking may not work for some channels.
+            configure_now: Configure now
     form:
         channel:
             plausible_script_identifier: Plausible script identifier

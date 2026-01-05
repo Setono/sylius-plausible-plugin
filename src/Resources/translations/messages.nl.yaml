@@ -13,6 +13,10 @@ setono_sylius_plausible:
         script_format_identifier: 'Alleen identificatie: pa-hb0WlWkUb5U3qhSS-vd-a'
         script_format_url: 'Volledige URL: https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js'
         script_format_html: 'HTML-snippet: <script async src="https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js"></script>'
+        notification:
+            title: Plausible Analytics is niet volledig geconfigureerd
+            message: Niet alle kanalen hebben Plausible Analytics geconfigureerd. Tracking werkt mogelijk niet voor sommige kanalen.
+            configure_now: Nu configureren
     form:
         channel:
             plausible_script_identifier: Plausible script

@@ -1,3 +1,9 @@
+setono_sylius_plausible_admin_ajax_dismiss_notification:
+    path: /ajax/plausible/dismiss-notification
+    methods: [POST]
+    defaults:
+        _controller: Setono\SyliusPlausiblePlugin\Controller\DismissNotificationAction
+
 setono_sylius_plausible_admin_channel_index:
     path: /plausible
     methods: [GET]
