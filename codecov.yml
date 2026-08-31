@@ -1,0 +1,16 @@
+# https://docs.codecov.com/docs/codecovyml-reference
+coverage:
+    status:
+        project:
+            default:
+                target: auto
+                # Removing covered code lowers the ratio even though nothing got worse: the hit
+                # count drops while the miss count stays put. Without a threshold every such
+                # refactor fails the build, so allow a small drop in the overall percentage.
+                threshold: 1%
+
+        # Left at the default on purpose. New and changed lines are still held to the project
+        # coverage level, so this only forgives the arithmetic above, not untested code.
+        patch:
+            default:
+                target: auto
