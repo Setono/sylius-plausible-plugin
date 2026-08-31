@@ -199,7 +199,7 @@ jobs:
                     dependency-versions: "${{ matrix.dependencies }}"
 
             -   name: "Run phpunit"
-                run: "composer phpunit"
+                run: "composer phpunit -- --testsuite unit"
 
     integration-tests:
         name: "Integration tests (PHP${{ matrix.php-version }} | Deps: ${{ matrix.dependencies }} | SF${{ matrix.symfony }})"
@@ -255,6 +255,9 @@ jobs:
 
             -   name: "Validate Doctrine mapping"
                 run: "(cd tests/Application && bin/console doctrine:schema:validate -vvv)" # The verbose flag will show 'missing' SQL statements, if any
+
+            -   name: "Run integration tests"
+                run: "vendor/bin/phpunit --testsuite integration"
     
     mutation-tests:
         name: "Mutation tests"
@@ -270,6 +273,9 @@ jobs:
                     - "highest"
 
         steps:
+            -   name: "Start MySQL" # infection runs every suite, including the one that needs a database
+                run: "sudo /etc/init.d/mysql start"
+
             -   name: "Checkout"
                 uses: "actions/checkout@v5"
 
@@ -284,6 +290,12 @@ jobs:
                 uses: "ramsey/composer-install@v3"
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
+
+            -   name: "Create database"
+                run: "(cd tests/Application && bin/console doctrine:database:create)"
+
+            -   name: "Create database schema"
+                run: "(cd tests/Application && bin/console doctrine:schema:create)"
 
             -   name: "Run infection"
                 run: "vendor/bin/infection"
@@ -320,7 +332,7 @@ jobs:
                     dependency-versions: "${{ matrix.dependencies }}"
 
             -   name: "Collect code coverage with pcov and phpunit/phpunit"
-                run: "vendor/bin/phpunit --coverage-clover=.build/logs/clover.xml"
+                run: "vendor/bin/phpunit --coverage-clover=.build/logs/clover.xml --testsuite unit"
 
             -   name: "Send code coverage report to Codecov.io"
                 uses: "codecov/codecov-action@v5"

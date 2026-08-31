@@ -8,8 +8,13 @@
         </include>
     </coverage>
     <testsuites>
-        <testsuite name="SetonoSyliusPlausiblePlugin Test Suite">
-            <directory>tests</directory>
+        <testsuite name="unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+
+        <!-- Needs a database: dispatching reaches the subscriber that resolves the current cart -->
+        <testsuite name="integration">
+            <directory>tests/Integration</directory>
         </testsuite>
     </testsuites>
     <php>
