@@ -182,7 +182,7 @@ final class PurchaseSubscriberTest extends TestCase
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
 
         $logger = $this->prophesize(\Psr\Log\LoggerInterface::class);
-        $logger->error(Argument::containingString('Purchase'))->shouldBeCalled();
+        $logger->error(Argument::containingString('Purchase'), Argument::withEntry('exception', Argument::type(\Throwable::class)))->shouldBeCalled();
 
         $session = new Session(new MockArraySessionStorage());
         $session->start();

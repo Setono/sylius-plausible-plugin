@@ -47,7 +47,7 @@ final class SelectPaymentMethodSubscriberTest extends TestCase
         $eventDispatcher->dispatch(\Prophecy\Argument::any())->willThrow(new \RuntimeException('Test error'));
 
         $logger = $this->prophesize(\Psr\Log\LoggerInterface::class);
-        $logger->error(\Prophecy\Argument::containingString('Select Payment Method'))->shouldBeCalled();
+        $logger->error(\Prophecy\Argument::containingString('Select Payment Method'), \Prophecy\Argument::withEntry('exception', \Prophecy\Argument::type(\Throwable::class)))->shouldBeCalled();
 
         $subscriber = new SelectPaymentMethodSubscriber($eventDispatcher->reveal());
         $subscriber->setLogger($logger->reveal());

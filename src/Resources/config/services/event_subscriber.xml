@@ -9,11 +9,19 @@
         <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\AddressSubscriber">
             <argument type="service" id="event_dispatcher"/>
 
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
+
             <tag name="kernel.event_subscriber"/>
         </service>
 
         <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\BeginCheckoutSubscriber">
             <argument type="service" id="event_dispatcher"/>
+
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
 
             <tag name="kernel.event_subscriber"/>
         </service>
@@ -22,17 +30,29 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sylius.repository.order"/>
 
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
+
             <tag name="kernel.event_subscriber"/>
         </service>
 
         <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\SelectPaymentMethodSubscriber">
             <argument type="service" id="event_dispatcher"/>
 
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
+
             <tag name="kernel.event_subscriber"/>
         </service>
 
         <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\SelectShippingMethodSubscriber">
             <argument type="service" id="event_dispatcher"/>
+
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
 
             <tag name="kernel.event_subscriber"/>
         </service>
