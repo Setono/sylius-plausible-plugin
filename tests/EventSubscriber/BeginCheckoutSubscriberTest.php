@@ -93,7 +93,7 @@ final class BeginCheckoutSubscriberTest extends TestCase
         $eventDispatcher->dispatch(\Prophecy\Argument::any())->willThrow(new \RuntimeException('Test error'));
 
         $logger = $this->prophesize(\Psr\Log\LoggerInterface::class);
-        $logger->error(\Prophecy\Argument::containingString('Begin Checkout'))->shouldBeCalled();
+        $logger->error(\Prophecy\Argument::containingString('Begin Checkout'), \Prophecy\Argument::withEntry('exception', \Prophecy\Argument::type(\Throwable::class)))->shouldBeCalled();
 
         $request = new Request();
         $request->attributes->set('_route', 'sylius_shop_checkout_start');

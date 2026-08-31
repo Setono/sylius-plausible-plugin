@@ -47,7 +47,7 @@ final class AddressSubscriberTest extends TestCase
         $eventDispatcher->dispatch(\Prophecy\Argument::any())->willThrow(new \RuntimeException('Test error'));
 
         $logger = $this->prophesize(\Psr\Log\LoggerInterface::class);
-        $logger->error(\Prophecy\Argument::containingString('Address'))->shouldBeCalled();
+        $logger->error(\Prophecy\Argument::containingString('Address'), \Prophecy\Argument::withEntry('exception', \Prophecy\Argument::type(\Throwable::class)))->shouldBeCalled();
 
         $subscriber = new AddressSubscriber($eventDispatcher->reveal());
         $subscriber->setLogger($logger->reveal());

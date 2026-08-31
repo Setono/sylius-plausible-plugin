@@ -30,6 +30,6 @@ abstract class AbstractEventSubscriber implements EventSubscriberInterface, Logg
             'An error occurred trying to track the event %s: %s',
             $event,
             $e->getMessage(),
-        ));
+        ), ['exception' => $e]);
     }
 }
