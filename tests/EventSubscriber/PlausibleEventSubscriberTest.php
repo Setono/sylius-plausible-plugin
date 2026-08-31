@@ -140,6 +140,52 @@ final class PlausibleEventSubscriberTest extends KernelTestCase
         self::assertStringNotContainsString('coupon_code', $tag->getContent());
     }
 
+    /**
+     * The payload is embedded verbatim in an inline <script> tag, so a value containing
+     * a closing script tag must not be able to terminate the element.
+     *
+     * @test
+     */
+    public function it_escapes_html_in_property_values(): void
+    {
+        $event = (new Event(Events::PURCHASE))
+            ->setProperty('coupon_code', '</script><img src=x onerror=alert(1)>');
+
+        $this->subscriber->add($event);
+
+        $tag = $this->getTagOrFail();
+        self::assertStringNotContainsString('</script>', $tag->getContent());
+        self::assertStringNotContainsString('<img', $tag->getContent());
+        self::assertStringContainsString('\u003C', $tag->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function it_escapes_html_in_the_event_name(): void
+    {
+        $event = new Event('</script><img src=x onerror=alert(1)>');
+
+        $this->subscriber->add($event);
+
+        $tag = $this->getTagOrFail();
+        self::assertStringNotContainsString('</script>', $tag->getContent());
+        self::assertStringNotContainsString('<img', $tag->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function it_escapes_quotes_in_the_event_name(): void
+    {
+        $event = new Event('Say "hello"');
+
+        $this->subscriber->add($event);
+
+        $tag = $this->getTagOrFail();
+        self::assertSame('plausible("Say \u0022hello\u0022");', $tag->getContent());
+    }
+
     private function getTagOrFail(): InlineScriptTag
     {
         $tag = $this->tagBag->getLastTag();
