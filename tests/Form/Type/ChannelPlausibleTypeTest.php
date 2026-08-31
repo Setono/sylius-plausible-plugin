@@ -7,6 +7,7 @@ namespace Setono\SyliusPlausiblePlugin\Tests\Form\Type;
 use Setono\SyliusPlausiblePlugin\Form\Type\ChannelPlausibleType;
 use Setono\SyliusPlausiblePlugin\Tests\Application\Entity\Channel;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Validation;
@@ -86,6 +87,34 @@ final class ChannelPlausibleTypeTest extends TypeTestCase
 
         self::assertTrue($form->isSynchronized());
         self::assertNull($channel->getPlausibleScriptIdentifier());
+    }
+
+    /**
+     * The example identifier is passed as a translation parameter rather than written into each
+     * locale, so the placeholder is only useful if both halves are actually wired up.
+     *
+     * @test
+     */
+    public function it_offers_the_example_identifier_in_the_placeholder(): void
+    {
+        $view = $this->factory->create(ChannelPlausibleType::class, new Channel())->createView();
+        $field = $view->children['plausibleScriptIdentifier'];
+        self::assertInstanceOf(FormView::class, $field);
+
+        // FormView::$vars is an untyped public property, so narrow it before reading offsets
+        $vars = $field->vars;
+        self::assertIsArray($vars);
+
+        $attr = $vars['attr'] ?? null;
+        self::assertIsArray($attr);
+        self::assertSame(
+            'setono_sylius_plausible.form.channel.plausible_script_identifier_placeholder',
+            $attr['placeholder'] ?? null,
+        );
+        self::assertSame(
+            ['%identifier%' => 'pa-hb0WlWkUb5U3qhSS-vd-a'],
+            $vars['attr_translation_parameters'] ?? null,
+        );
     }
 
     /**
