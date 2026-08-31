@@ -29,5 +29,7 @@ parameters:
             path: src/Model
         -
             identifier: doctrine.associationType
+            path: src/Model
         -
             identifier: doctrine.columnType
+            path: src/Model
