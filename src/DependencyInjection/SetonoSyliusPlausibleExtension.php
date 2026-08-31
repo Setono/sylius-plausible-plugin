@@ -15,8 +15,11 @@ final class SetonoSyliusPlausibleExtension extends AbstractResourceExtension imp
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        /** @var array{resources: array<mixed>} $config */
+        /** @var array{script_host: string, resources: array<mixed>} $config */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
+
+        $container->setParameter('setono_sylius_plausible.script_host', $config['script_host']);
+
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 

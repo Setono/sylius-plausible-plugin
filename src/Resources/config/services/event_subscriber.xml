@@ -66,6 +66,7 @@
         <service id="Setono\SyliusPlausiblePlugin\EventSubscriber\PlausibleLibrarySubscriber">
             <argument type="service" id="setono_tag_bag.tag_bag"/>
             <argument type="service" id="sylius.context.channel"/>
+            <argument>%setono_sylius_plausible.script_host%</argument>
 
             <tag name="kernel.event_subscriber"/>
         </service>
