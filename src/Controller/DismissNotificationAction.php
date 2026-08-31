@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\Controller;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ManagerRegistry;
 use Setono\Doctrine\ORMTrait;
 use Setono\SyliusPlausiblePlugin\Factory\NotificationDismissalFactoryInterface;
@@ -42,7 +43,13 @@ final class DismissNotificationAction
 
         $manager = $this->getManager($dismissal);
         $manager->persist($dismissal);
-        $manager->flush();
+
+        try {
+            $manager->flush();
+        } catch (UniqueConstraintViolationException) {
+            // another request dismissed the notification for this user at the same time,
+            // which is the outcome we wanted anyway
+        }
 
         return new JsonResponse(['success' => true]);
     }
