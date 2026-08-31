@@ -74,10 +74,16 @@ jobs:
                     - "8.1"
                     - "8.2"
                     - "8.3"
+                    - "8.4"
 
                 dependencies:
                     - "lowest"
                     - "highest"
+
+                exclude:
+                    # the lowest supported versions of our dependencies predate PHP 8.4
+                    -   php-version: "8.4"
+                        dependencies: "lowest"
                 
                 symfony:
                     - "~6.4.0"
@@ -121,10 +127,16 @@ jobs:
                     - "8.1"
                     - "8.2"
                     - "8.3"
+                    - "8.4"
 
                 dependencies:
                     - "lowest"
                     - "highest"
+
+                exclude:
+                    # the lowest supported versions of our dependencies predate PHP 8.4
+                    -   php-version: "8.4"
+                        dependencies: "lowest"
 
                 symfony:
                     - "~6.4.0"
@@ -165,10 +177,16 @@ jobs:
                     - "8.1"
                     - "8.2"
                     - "8.3"
+                    - "8.4"
                 
                 dependencies:
                     - "lowest"
                     - "highest"
+
+                exclude:
+                    # the lowest supported versions of our dependencies predate PHP 8.4
+                    -   php-version: "8.4"
+                        dependencies: "lowest"
 
                 symfony:
                     - "~6.4.0"
@@ -206,10 +224,16 @@ jobs:
                     - "8.1"
                     - "8.2"
                     - "8.3"
+                    - "8.4"
 
                 dependencies:
                     - "lowest"
                     - "highest"
+
+                exclude:
+                    # the lowest supported versions of our dependencies predate PHP 8.4
+                    -   php-version: "8.4"
+                        dependencies: "lowest"
                 
                 symfony:
                     - "~6.4.0"
