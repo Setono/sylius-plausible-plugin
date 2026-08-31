@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\Tests\Controller;
 
+use Doctrine\DBAL\Driver\Exception as DriverException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\Query;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
@@ -98,6 +101,54 @@ final class DismissNotificationActionTest extends TestCase
         $content = json_decode((string) $response->getContent(), true);
         self::assertIsArray($content);
         self::assertTrue($content['success']);
+    }
+
+    /**
+     * The dismissal table has a unique constraint on the admin user, so two concurrent
+     * dismissals race. Losing that race still leaves the notification dismissed.
+     *
+     * @test
+     */
+    public function it_succeeds_when_a_concurrent_request_already_created_the_dismissal(): void
+    {
+        $adminUser = $this->prophesize(AdminUserInterface::class);
+
+        $security = $this->prophesize(Security::class);
+        $security->getUser()->willReturn($adminUser->reveal());
+
+        $dismissalRepository = $this->prophesize(NotificationDismissalRepositoryInterface::class);
+        $dismissalRepository->findByAdminUser($adminUser->reveal())->willReturn(null);
+
+        $hashGenerator = $this->prophesize(ChannelConfigurationHashGeneratorInterface::class);
+        $hashGenerator->generate()->willReturn('hash123');
+
+        $dismissal = $this->prophesize(NotificationDismissalInterface::class);
+        $dismissal->setConfigurationHash('hash123')->shouldBeCalled();
+
+        $dismissalFactory = $this->prophesize(NotificationDismissalFactoryInterface::class);
+        $dismissalFactory->createForAdminUser($adminUser->reveal())->willReturn($dismissal->reveal());
+
+        $entityManager = $this->prophesize(EntityManagerInterface::class);
+        $entityManager->persist($dismissal->reveal())->shouldBeCalled();
+        $entityManager->flush()->willThrow(new UniqueConstraintViolationException(
+            $this->prophesize(DriverException::class)->reveal(),
+            new Query('', [], []),
+        ));
+
+        $managerRegistry = $this->prophesize(ManagerRegistry::class);
+        $managerRegistry->getManagerForClass(Argument::any())->willReturn($entityManager->reveal());
+
+        $action = new DismissNotificationAction(
+            $security->reveal(),
+            $dismissalRepository->reveal(),
+            $hashGenerator->reveal(),
+            $dismissalFactory->reveal(),
+            $managerRegistry->reveal(),
+        );
+
+        $response = $action();
+
+        self::assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
     /**
