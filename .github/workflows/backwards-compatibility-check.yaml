@@ -11,6 +11,12 @@ jobs:
 
         runs-on: "ubuntu-latest"
 
+        # 2.x has no stable release yet, so there is no published API to break and the check has
+        # nothing meaningful to compare against - it just reports every deliberate signature change
+        # on the way to 2.0.0. Kept running so the report stays visible, but not blocking.
+        # Remove this once 2.0.0 is tagged.
+        continue-on-error: true
+
         steps:
             -   name: "Checkout"
                 uses: "actions/checkout@v4"
