@@ -33,6 +33,7 @@
         "symfony/http-kernel": "^6.4",
         "symfony/options-resolver": "^6.4",
         "symfony/security-bundle": "^6.4",
+        "symfony/security-csrf": "^6.4",
         "symfony/serializer": "^6.4.30",
         "twig/twig": "^2.15 || ^3.22",
         "webmozart/assert": "^1.12"
