@@ -16,8 +16,10 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Setono\SyliusPlausiblePlugin\Controller\DismissNotificationAction;
 use Setono\SyliusPlausiblePlugin\Factory\NotificationDismissalFactoryInterface;
 use Setono\SyliusPlausiblePlugin\Generator\ChannelConfigurationHashGeneratorInterface;
+use Setono\SyliusPlausiblePlugin\Model\ChannelInterface;
 use Setono\SyliusPlausiblePlugin\Model\NotificationDismissalInterface;
 use Setono\SyliusPlausiblePlugin\Repository\NotificationDismissalRepositoryInterface;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\AdminUserInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,6 +34,17 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 final class DismissNotificationActionTest extends TestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @return ChannelRepositoryInterface<ChannelInterface>
+     */
+    private function channelRepository(): ChannelRepositoryInterface
+    {
+        $channelRepository = $this->prophesize(ChannelRepositoryInterface::class);
+        $channelRepository->findAll()->willReturn([]);
+
+        return $channelRepository->reveal();
+    }
 
     /**
      * @test
@@ -52,6 +65,7 @@ final class DismissNotificationActionTest extends TestCase
             $dismissalRepository->reveal(),
             $hashGenerator->reveal(),
             $dismissalFactory->reveal(),
+            $this->channelRepository(),
             $managerRegistry->reveal(),
             $csrfTokenManager->reveal(),
         );
@@ -76,7 +90,7 @@ final class DismissNotificationActionTest extends TestCase
         $dismissalRepository->findByAdminUser($adminUser->reveal())->willReturn(null);
 
         $hashGenerator = $this->prophesize(ChannelConfigurationHashGeneratorInterface::class);
-        $hashGenerator->generate()->willReturn('hash123');
+        $hashGenerator->generate(Argument::type('array'))->willReturn('hash123');
 
         $dismissal = $this->prophesize(NotificationDismissalInterface::class);
         $dismissal->setConfigurationHash('hash123')->shouldBeCalled();
@@ -98,6 +112,7 @@ final class DismissNotificationActionTest extends TestCase
             $dismissalRepository->reveal(),
             $hashGenerator->reveal(),
             $dismissalFactory->reveal(),
+            $this->channelRepository(),
             $managerRegistry->reveal(),
             $csrfTokenManager->reveal(),
         );
@@ -129,7 +144,7 @@ final class DismissNotificationActionTest extends TestCase
         $dismissalRepository->findByAdminUser($adminUser->reveal())->willReturn(null);
 
         $hashGenerator = $this->prophesize(ChannelConfigurationHashGeneratorInterface::class);
-        $hashGenerator->generate()->willReturn('hash123');
+        $hashGenerator->generate(Argument::type('array'))->willReturn('hash123');
 
         $dismissal = $this->prophesize(NotificationDismissalInterface::class);
         $dismissal->setConfigurationHash('hash123')->shouldBeCalled();
@@ -154,6 +169,7 @@ final class DismissNotificationActionTest extends TestCase
             $dismissalRepository->reveal(),
             $hashGenerator->reveal(),
             $dismissalFactory->reveal(),
+            $this->channelRepository(),
             $managerRegistry->reveal(),
             $csrfTokenManager->reveal(),
         );
@@ -180,7 +196,7 @@ final class DismissNotificationActionTest extends TestCase
         $dismissalRepository->findByAdminUser($adminUser->reveal())->willReturn($dismissal->reveal());
 
         $hashGenerator = $this->prophesize(ChannelConfigurationHashGeneratorInterface::class);
-        $hashGenerator->generate()->willReturn('hash456');
+        $hashGenerator->generate(Argument::type('array'))->willReturn('hash456');
 
         $dismissalFactory = $this->prophesize(NotificationDismissalFactoryInterface::class);
 
@@ -198,6 +214,7 @@ final class DismissNotificationActionTest extends TestCase
             $dismissalRepository->reveal(),
             $hashGenerator->reveal(),
             $dismissalFactory->reveal(),
+            $this->channelRepository(),
             $managerRegistry->reveal(),
             $csrfTokenManager->reveal(),
         );
@@ -237,6 +254,7 @@ final class DismissNotificationActionTest extends TestCase
             $dismissalRepository->reveal(),
             $hashGenerator->reveal(),
             $dismissalFactory->reveal(),
+            $this->channelRepository(),
             $managerRegistry->reveal(),
             $csrfTokenManager->reveal(),
         );
@@ -271,6 +289,7 @@ final class DismissNotificationActionTest extends TestCase
             $dismissalRepository->reveal(),
             $hashGenerator->reveal(),
             $dismissalFactory->reveal(),
+            $this->channelRepository(),
             $managerRegistry->reveal(),
             $csrfTokenManager->reveal(),
         );
