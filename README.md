@@ -10,6 +10,8 @@
 
 Use [Plausible Analytics](https://plausible.io) to track visitors and events in your Sylius store.
 
+This plugin supports Sylius 1.x.
+
 ## Installation
 
 ### Step 1: Install and enable the plugin
