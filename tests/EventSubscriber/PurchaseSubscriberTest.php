@@ -83,6 +83,83 @@ final class PurchaseSubscriberTest extends TestCase
     /**
      * @test
      */
+    public function it_sets_the_completed_order_on_the_event(): void
+    {
+        $order = $this->prophesize(OrderInterface::class);
+        $order->getCurrencyCode()->willReturn('USD');
+        $order->getTotal()->willReturn(10000);
+
+        $orderRepository = $this->prophesize(OrderRepositoryInterface::class);
+        $orderRepository->find(123)->willReturn($order->reveal());
+
+        $dispatchedEvent = null;
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::type(Event::class))->will(
+            function (array $args) use (&$dispatchedEvent): Event {
+                /** @var Event $event */
+                $event = $args[0];
+                $dispatchedEvent = $event;
+
+                return $event;
+            },
+        )->shouldBeCalled();
+
+        $subscriber = new PurchaseSubscriber($eventDispatcher->reveal(), $orderRepository->reveal());
+        $subscriber->track($this->createThankYouRequestEvent(123));
+
+        self::assertInstanceOf(Event::class, $dispatchedEvent);
+        self::assertSame($order->reveal(), $dispatchedEvent->getOrder());
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_set_revenue_when_the_order_has_no_currency_code(): void
+    {
+        $order = $this->prophesize(OrderInterface::class);
+        $order->getCurrencyCode()->willReturn(null);
+        $order->getTotal()->willReturn(10000);
+
+        $orderRepository = $this->prophesize(OrderRepositoryInterface::class);
+        $orderRepository->find(123)->willReturn($order->reveal());
+
+        $dispatchedEvent = null;
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::type(Event::class))->will(
+            function (array $args) use (&$dispatchedEvent): Event {
+                /** @var Event $event */
+                $event = $args[0];
+                $dispatchedEvent = $event;
+
+                return $event;
+            },
+        )->shouldBeCalled();
+
+        $subscriber = new PurchaseSubscriber($eventDispatcher->reveal(), $orderRepository->reveal());
+        $subscriber->track($this->createThankYouRequestEvent(123));
+
+        self::assertInstanceOf(Event::class, $dispatchedEvent);
+        self::assertNull($dispatchedEvent->getRevenue());
+    }
+
+    private function createThankYouRequestEvent(int $orderId): RequestEvent
+    {
+        $session = new Session(new MockArraySessionStorage());
+        $session->start();
+        $session->set('sylius_order_id', $orderId);
+
+        $request = new Request();
+        $request->attributes->set('_route', 'sylius_shop_order_thank_you');
+        $request->setSession($session);
+
+        $kernel = $this->prophesize(HttpKernelInterface::class);
+
+        return new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
+    }
+
+    /**
+     * @test
+     */
     public function it_does_not_dispatch_event_for_non_main_request(): void
     {
         $orderRepository = $this->prophesize(OrderRepositoryInterface::class);

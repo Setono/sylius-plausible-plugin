@@ -27,13 +27,12 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
 
     public function populate(Event $event): void
     {
-        try {
-            $order = $this->cartContext->getCart();
-        } catch (CartNotFoundException) {
-            return;
-        }
+        // The event knows its own order for events dispatched outside the cart flow, most
+        // importantly the purchase event: on the thank you page the completed order is no
+        // longer in the 'cart' state, so the cart context would return an unrelated cart.
+        $order = $event->getOrder() ?? $this->getCart();
 
-        if (!$order instanceof OrderInterface) {
+        if (null === $order) {
             return;
         }
 
@@ -53,6 +52,17 @@ final class PopulateOrderRelatedPropertiesSubscriber implements EventSubscriberI
             ->setProperty('shipping_method', self::getLastShipment($order)?->getMethod()?->getCode())
             ->setProperty('coupon_code', $order->getPromotionCoupon()?->getCode())
         ;
+    }
+
+    private function getCart(): ?OrderInterface
+    {
+        try {
+            $cart = $this->cartContext->getCart();
+        } catch (CartNotFoundException) {
+            return null;
+        }
+
+        return $cart instanceof OrderInterface ? $cart : null;
     }
 
     private static function getLastShipment(OrderInterface $order): ?ShipmentInterface

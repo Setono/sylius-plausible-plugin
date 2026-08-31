@@ -56,10 +56,14 @@ final class PurchaseSubscriber extends AbstractEventSubscriber
                 return;
             }
 
-            $this->eventDispatcher->dispatch(
-                (new Event(Events::PURCHASE))
-                    ->setRevenue((string) $order->getCurrencyCode(), formatMoney($order->getTotal())),
-            );
+            $event = (new Event(Events::PURCHASE))->setOrder($order);
+
+            $currencyCode = $order->getCurrencyCode();
+            if (null !== $currencyCode) {
+                $event->setRevenue($currencyCode, formatMoney($order->getTotal()));
+            }
+
+            $this->eventDispatcher->dispatch($event);
         } catch (\Throwable $e) {
             $this->log(Events::PURCHASE, $e);
         }

@@ -4,11 +4,21 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\Event\Plausible;
 
+use Sylius\Component\Core\Model\OrderInterface;
+
 final class Event
 {
     private Properties $properties;
 
     private ?Revenue $revenue = null;
+
+    /**
+     * The order this event relates to, when it is known by the subscriber dispatching the event.
+     *
+     * Listeners that enrich the event should prefer this order over any order they resolve
+     * themselves: on the thank you page the completed order is no longer the current cart.
+     */
+    private ?OrderInterface $order = null;
 
     public function __construct(private readonly string $name)
     {
@@ -57,6 +67,18 @@ final class Event
     public function setRevenue(string $currency, float $amount): static
     {
         $this->revenue = new Revenue($currency, $amount);
+
+        return $this;
+    }
+
+    public function getOrder(): ?OrderInterface
+    {
+        return $this->order;
+    }
+
+    public function setOrder(?OrderInterface $order): static
+    {
+        $this->order = $order;
 
         return $this;
     }

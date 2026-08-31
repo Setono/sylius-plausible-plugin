@@ -12,6 +12,7 @@ use function Setono\SyliusPlausiblePlugin\formatMoney;
 use Setono\TagBag\Tag\InlineScriptTag;
 use Setono\TagBag\Tag\TagInterface;
 use Setono\TagBag\TagBagInterface;
+use Sylius\Component\Core\Model\Order;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\SerializerInterface;
 use Webmozart\Assert\Assert;
@@ -184,6 +185,27 @@ final class PlausibleEventSubscriberTest extends KernelTestCase
 
         $tag = $this->getTagOrFail();
         self::assertSame('plausible("Say \u0022hello\u0022");', $tag->getContent());
+    }
+
+    /**
+     * The order is carried on the event purely so listeners can enrich it. It must never be
+     * serialized into the payload that goes to Plausible.
+     *
+     * @test
+     */
+    public function it_does_not_serialize_the_order_carried_on_the_event(): void
+    {
+        $order = new Order();
+        $order->setNumber('000000123');
+
+        $event = (new Event(Events::PURCHASE))
+            ->setOrder($order)
+            ->setProperty('order_id', 123);
+
+        $this->subscriber->add($event);
+
+        $tag = $this->getTagOrFail();
+        self::assertSame('plausible("Purchase", {"props":{"order_id":123}});', $tag->getContent());
     }
 
     private function getTagOrFail(): InlineScriptTag
