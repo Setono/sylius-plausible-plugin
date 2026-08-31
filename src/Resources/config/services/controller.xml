@@ -8,6 +8,7 @@
             <argument type="service" id="Setono\SyliusPlausiblePlugin\Generator\ChannelConfigurationHashGeneratorInterface"/>
             <argument type="service" id="Setono\SyliusPlausiblePlugin\Factory\NotificationDismissalFactoryInterface"/>
             <argument type="service" id="doctrine"/>
+            <argument type="service" id="security.csrf.token_manager"/>
         </service>
     </services>
 </container>
