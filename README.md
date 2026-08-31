@@ -10,6 +10,20 @@
 
 Use [Plausible Analytics](https://plausible.io) to track visitors and events in your Sylius store.
 
+## Requirements
+
+| | Version |
+|---|---|
+| PHP | 8.1 – 8.4 |
+| Sylius | 1.14 |
+| Symfony | 6.4 |
+
+Every combination in that table is covered by the build. Symfony 7 and Sylius 2 are not supported yet.
+
+> [!NOTE]
+> The `2.x` branch is the Sylius **1.14** line of the plugin. The branch name tracks the plugin's own
+> major version, not Sylius'.
+
 ## Installation
 
 ### Step 1: Install and enable the plugin
