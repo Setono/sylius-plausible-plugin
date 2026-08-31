@@ -11,6 +11,7 @@ use Setono\SyliusPlausiblePlugin\EventSubscriber\AdminMenuSubscriber;
 use Setono\SyliusPlausiblePlugin\EventSubscriber\BeginCheckoutSubscriber;
 use Setono\SyliusPlausiblePlugin\EventSubscriber\PlausibleEventSubscriber;
 use Setono\SyliusPlausiblePlugin\EventSubscriber\PlausibleLibrarySubscriber;
+use Setono\SyliusPlausiblePlugin\EventSubscriber\PopulateOrderRelatedPropertiesSubscriber;
 use Setono\SyliusPlausiblePlugin\EventSubscriber\PurchaseSubscriber;
 use Setono\SyliusPlausiblePlugin\EventSubscriber\SelectPaymentMethodSubscriber;
 use Setono\SyliusPlausiblePlugin\EventSubscriber\SelectShippingMethodSubscriber;
@@ -89,6 +90,86 @@ final class SetonoSyliusPlausibleExtensionTest extends AbstractExtensionTestCase
         yield [AddressSubscriber::class];
         yield [BeginCheckoutSubscriber::class];
         yield [PlausibleEventSubscriber::class];
+        yield [PurchaseSubscriber::class];
+        yield [SelectPaymentMethodSubscriber::class];
+        yield [SelectShippingMethodSubscriber::class];
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_enabled_by_default(): void
+    {
+        $this->load();
+
+        $this->assertContainerBuilderHasParameter('setono_sylius_plausible.enabled', true);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_disabled(): void
+    {
+        $this->load(['enabled' => false]);
+
+        $this->assertContainerBuilderHasParameter('setono_sylius_plausible.enabled', false);
+    }
+
+    /**
+     * Nothing that tracks is registered when the plugin is disabled, so no listener runs and no
+     * work is done - rather than doing the work and discarding the result at the end.
+     *
+     * @test
+     *
+     * @dataProvider trackingServices
+     *
+     * @param class-string $serviceId
+     */
+    public function it_does_not_register_the_tracking_services_when_disabled(string $serviceId): void
+    {
+        $this->load(['enabled' => false]);
+
+        $this->assertContainerBuilderNotHasService($serviceId);
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider trackingServices
+     *
+     * @param class-string $serviceId
+     */
+    public function it_registers_the_tracking_services_when_enabled(string $serviceId): void
+    {
+        $this->load();
+
+        $this->assertContainerBuilderHasService($serviceId);
+    }
+
+    /**
+     * Disabling tracking must not take the admin UI away, otherwise channels could not be
+     * configured on an environment where tracking is off.
+     *
+     * @test
+     */
+    public function it_keeps_the_admin_ui_registered_when_disabled(): void
+    {
+        $this->load(['enabled' => false]);
+
+        $this->assertContainerBuilderHasService(AdminMenuSubscriber::class);
+        $this->assertContainerBuilderHasService(ChannelPlausibleType::class);
+    }
+
+    /**
+     * @return iterable<array-key, array{class-string}>
+     */
+    public static function trackingServices(): iterable
+    {
+        yield [AddressSubscriber::class];
+        yield [BeginCheckoutSubscriber::class];
+        yield [PlausibleEventSubscriber::class];
+        yield [PlausibleLibrarySubscriber::class];
+        yield [PopulateOrderRelatedPropertiesSubscriber::class];
         yield [PurchaseSubscriber::class];
         yield [SelectPaymentMethodSubscriber::class];
         yield [SelectShippingMethodSubscriber::class];

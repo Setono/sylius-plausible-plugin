@@ -21,6 +21,7 @@ final class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('setono_sylius_plausible');
         $rootNode = $treeBuilder->getRootNode();
+        $rootNode->canBeDisabled();
 
         $this->addScriptHostSection($rootNode);
         $this->addResourcesSection($rootNode);
