@@ -36,10 +36,7 @@ final class DismissNotificationAction
         }
 
         $dismissal = $this->dismissalRepository->findByAdminUser($user);
-
-        if (null === $dismissal) {
-            $dismissal = $this->dismissalFactory->createForAdminUser($user);
-        }
+        $dismissal ??= $this->dismissalFactory->createForAdminUser($user);
 
         $dismissal->setConfigurationHash($this->hashGenerator->generate());
 
