@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\EventSubscriber;
 
+use Setono\SyliusPlausiblePlugin\DependencyInjection\Configuration;
 use Setono\SyliusPlausiblePlugin\Model\ChannelInterface;
 use Setono\TagBag\Tag\InlineScriptTag;
 use Setono\TagBag\Tag\ScriptTag;
@@ -22,6 +23,7 @@ final class PlausibleLibrarySubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly TagBagInterface $tagBag,
         private readonly ChannelContextInterface $channelContext,
+        private readonly string $scriptHost = Configuration::DEFAULT_SCRIPT_HOST,
     ) {
     }
 
@@ -59,7 +61,7 @@ final class PlausibleLibrarySubscriber implements EventSubscriberInterface
         }
 
         $this->tagBag->add(
-            ScriptTag::create(sprintf('https://plausible.io/js/%s.js', $identifier))
+            ScriptTag::create(sprintf('%s/js/%s.js', $this->scriptHost, $identifier))
                 ->async()
                 ->withSection(TagInterface::SECTION_HEAD)
                 ->withFingerprint(self::TAG_FINGERPRINT),

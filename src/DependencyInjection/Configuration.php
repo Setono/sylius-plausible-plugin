@@ -15,14 +15,39 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 final class Configuration implements ConfigurationInterface
 {
+    public const DEFAULT_SCRIPT_HOST = 'https://plausible.io';
+
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('setono_sylius_plausible');
         $rootNode = $treeBuilder->getRootNode();
 
+        $this->addScriptHostSection($rootNode);
         $this->addResourcesSection($rootNode);
 
         return $treeBuilder;
+    }
+
+    private function addScriptHostSection(ArrayNodeDefinition $node): void
+    {
+        $node
+            ->children()
+                ->scalarNode('script_host')
+                    ->info('The host serving the Plausible script. Change this if you self host Plausible, i.e. Plausible Community Edition.')
+                    ->example('https://analytics.example.com')
+                    ->defaultValue(self::DEFAULT_SCRIPT_HOST)
+                    ->cannotBeEmpty()
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(static fn (string $value): string => rtrim(trim($value), '/'))
+                    ->end()
+                    ->validate()
+                        ->ifTrue(static fn (string $value): bool => !str_starts_with($value, 'http://') && !str_starts_with($value, 'https://'))
+                        ->thenInvalid('The script host must be an absolute URL including the scheme, i.e. https://plausible.io. Got %s')
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 
     private function addResourcesSection(ArrayNodeDefinition $node): void

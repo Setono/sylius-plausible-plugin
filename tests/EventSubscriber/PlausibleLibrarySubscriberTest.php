@@ -66,6 +66,36 @@ final class PlausibleLibrarySubscriberTest extends TestCase
     /**
      * @test
      */
+    public function it_loads_the_script_from_a_configured_self_hosted_host(): void
+    {
+        $channel = $this->prophesize(ChannelInterface::class);
+        $channel->getPlausibleScriptIdentifier()->willReturn('pa-test123');
+
+        $channelContext = $this->prophesize(ChannelContextInterface::class);
+        $channelContext->getChannel()->willReturn($channel->reveal());
+
+        $tagBag = $this->prophesize(TagBagInterface::class);
+        $tagBag->add(Argument::that(fn ($tag) => $tag instanceof ScriptTag &&
+            'https://analytics.example.com/js/pa-test123.js' === $tag->getSrc()))->shouldBeCalled();
+        $tagBag->add(Argument::that(fn ($tag) => $tag instanceof InlineScriptTag))->shouldBeCalled();
+
+        $request = new Request();
+        $request->headers->set('Accept', 'text/html');
+
+        $kernel = $this->prophesize(HttpKernelInterface::class);
+        $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
+
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://analytics.example.com',
+        );
+        $subscriber->add($requestEvent);
+    }
+
+    /**
+     * @test
+     */
     public function it_does_not_add_tags_for_sub_requests(): void
     {
         $channelContext = $this->prophesize(ChannelContextInterface::class);

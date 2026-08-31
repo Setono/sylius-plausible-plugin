@@ -113,3 +113,15 @@ You can enter the Plausible script in any of the following formats:
 - **HTML snippet**: `<script async src="https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js"></script>`
 
 The plugin will normalize any of these formats and output the correct script tag on your storefront.
+
+### Self-hosted Plausible
+
+If you run [Plausible Community Edition](https://github.com/plausible/community-edition), point the plugin at your own host:
+
+```yaml
+# config/packages/setono_sylius_plausible.yaml
+setono_sylius_plausible:
+    script_host: 'https://analytics.example.com'
+```
+
+The script is then loaded from `https://analytics.example.com/js/<identifier>.js`. Defaults to `https://plausible.io`.
