@@ -127,3 +127,99 @@ You can enter the Plausible script in any of the following formats:
 - **HTML snippet**: `<script async src="https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js"></script>`
 
 The plugin will normalize any of these formats and output the correct script tag on your storefront.
+
+## What gets tracked
+
+The plugin sends five custom events. Each one is written to the page as a `plausible(...)` call by
+[setono/tag-bag](https://github.com/Setono/tag-bag), so an event triggered by a form submission fires
+on the next page the visitor sees.
+
+| Event name | Fires when |
+|---|---|
+| `Begin Checkout` | The visitor lands on the checkout start route |
+| `Address` | The addressing step is completed |
+| `Select Shipping Method` | The shipping step is completed |
+| `Select Payment Method` | The payment step is completed |
+| `Purchase` | The visitor reaches the thank you page |
+
+### Properties
+
+Every event carries the properties of the order it relates to. For the four checkout events that is the
+current cart; for `Purchase` it is the completed order.
+
+| Property | Type | Notes |
+|---|---|---|
+| `order_id` | int | |
+| `order_number` | string | |
+| `order_total` | float | Major units, i.e. `100.0`, not `10000` |
+| `tax_total` | float | |
+| `shipping_total` | float | |
+| `order_promotion_total` | float | Negative |
+| `payment_method` | string | Payment method **code** |
+| `shipping_method` | string | Shipping method **code** |
+| `coupon_code` | string | |
+
+Properties that are `null` or an empty string are left out, so an order without a coupon has no
+`coupon_code` property rather than an empty one. No customer data is sent.
+
+The `Purchase` event additionally carries revenue:
+
+```js
+plausible("Purchase", {"props":{"order_id":123},"revenue":{"currency":"USD","amount":100}});
+```
+
+> [!NOTE]
+> Custom properties and revenue have to be enabled in your Plausible dashboard before they show up. See
+> [custom properties](https://plausible.io/docs/custom-props/introduction) and
+> [revenue tracking](https://plausible.io/docs/ecommerce-revenue-tracking).
+
+## Tracking your own events
+
+Dispatch the plugin's event and it is turned into a `plausible(...)` call for you:
+
+```php
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
+
+final class NewsletterSignupHandler
+{
+    public function __construct(private readonly EventDispatcherInterface $eventDispatcher)
+    {
+    }
+
+    public function __invoke(): void
+    {
+        $this->eventDispatcher->dispatch(
+            (new Event('Newsletter Signup'))->setProperty('source', 'footer'),
+        );
+    }
+}
+```
+
+To add properties to the events the plugin already sends, listen to the same event class. The subscriber
+that renders the tag runs at priority `-100`, so a listener at the default priority still gets a say:
+
+```php
+use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
+use Setono\SyliusPlausiblePlugin\Event\Plausible\Events;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+
+#[AsEventListener(event: Event::class)]
+final class AddCustomerGroupListener
+{
+    public function __invoke(Event $event): void
+    {
+        if (Events::PURCHASE !== $event->getName()) {
+            return;
+        }
+
+        $event->setProperty('customer_group', 'wholesale');
+    }
+}
+```
+
+> [!WARNING]
+> Property values end up inside an inline `<script>` tag. The plugin escapes them, but keep customer
+> supplied data out of your properties unless you have a good reason to send it — Plausible is not the
+> place for personal data.
+
