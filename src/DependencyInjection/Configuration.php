@@ -70,6 +70,12 @@ final class Configuration implements ConfigurationInterface
                                     ->scalarNode('factory')->defaultValue(Factory::class)->end()
                                     ->scalarNode('repository')->defaultValue(NotificationDismissalRepository::class)->end()
                                     ->scalarNode('form')->defaultValue(DefaultResourceType::class)->cannotBeEmpty()->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
         ;
     }
 }
