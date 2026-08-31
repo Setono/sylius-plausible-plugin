@@ -114,6 +114,20 @@ You can enter the Plausible script in any of the following formats:
 
 The plugin will normalize any of these formats and output the correct script tag on your storefront.
 
+### Disabling tracking
+
+Tracking is enabled by default. Turn it off in environments that shouldn't report to Plausible,
+for instance staging:
+
+```yaml
+# config/packages/setono_sylius_plausible.yaml
+setono_sylius_plausible:
+    enabled: false
+```
+
+While disabled, none of the tracking services are registered at all, so no listener runs and no work
+is done. The admin UI stays available, so you can still configure your channels.
+
 ### Self-hosted Plausible
 
 If you run [Plausible Community Edition](https://github.com/plausible/community-edition), point the plugin at your own host:

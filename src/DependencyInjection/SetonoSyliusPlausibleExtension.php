@@ -15,13 +15,20 @@ final class SetonoSyliusPlausibleExtension extends AbstractResourceExtension imp
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        /** @var array{script_host: string, resources: array<mixed>} $config */
+        /** @var array{enabled: bool, script_host: string, resources: array<mixed>} $config */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
 
+        $container->setParameter('setono_sylius_plausible.enabled', $config['enabled']);
         $container->setParameter('setono_sylius_plausible.script_host', $config['script_host']);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+
+        // The admin UI stays available when the plugin is disabled, so that channels can still be
+        // configured, but nothing that tracks is registered at all
+        if ($config['enabled']) {
+            $loader->load('services/tracking.xml');
+        }
 
         $this->registerResources('setono_sylius_plausible', SyliusResourceBundle::DRIVER_DOCTRINE_ORM, $config['resources'], $container);
     }
