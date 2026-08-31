@@ -18,6 +18,7 @@
         "setono/doctrine-orm-trait": "^1.2",
         "setono/tag-bag": "^2.4",
         "setono/tag-bag-bundle": "^3.0",
+        "sylius/admin-bundle": "^1.0",
         "sylius/channel": "^1.0",
         "sylius/core": "^1.0",
         "sylius/core-bundle": "^1.0",

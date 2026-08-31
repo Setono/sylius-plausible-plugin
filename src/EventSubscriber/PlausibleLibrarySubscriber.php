@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\EventSubscriber;
 
-use Setono\SyliusPlausiblePlugin\DependencyInjection\Configuration;
 use Setono\SyliusPlausiblePlugin\Model\ChannelInterface;
 use Setono\TagBag\Tag\InlineScriptTag;
 use Setono\TagBag\Tag\ScriptTag;
 use Setono\TagBag\Tag\TagInterface;
 use Setono\TagBag\TagBagInterface;
+use Sylius\Bundle\AdminBundle\SectionResolver\AdminSection;
+use Sylius\Bundle\CoreBundle\SectionResolver\SectionProviderInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Context\ChannelNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -23,7 +24,8 @@ final class PlausibleLibrarySubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly TagBagInterface $tagBag,
         private readonly ChannelContextInterface $channelContext,
-        private readonly string $scriptHost = Configuration::DEFAULT_SCRIPT_HOST,
+        private readonly string $scriptHost,
+        private readonly SectionProviderInterface $sectionProvider,
     ) {
     }
 
@@ -37,6 +39,12 @@ final class PlausibleLibrarySubscriber implements EventSubscriberInterface
     public function add(RequestEvent $event): void
     {
         if (!$event->isMainRequest() || $event->getRequest()->isXmlHttpRequest()) {
+            return;
+        }
+
+        // The admin layout never renders the tag bag, so anything added here would only be
+        // written to the admin user's session and carried around until a shop page flushes it
+        if ($this->sectionProvider->getSection() instanceof AdminSection) {
             return;
         }
 
