@@ -24,8 +24,8 @@ final class PlausibleLibrarySubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly TagBagInterface $tagBag,
         private readonly ChannelContextInterface $channelContext,
-        private readonly string $scriptHost,
         private readonly SectionProviderInterface $sectionProvider,
+        private readonly string $scriptHost,
     ) {
     }
 
