@@ -18,7 +18,41 @@ Use [Plausible Analytics](https://plausible.io) to track visitors and events in 
 composer require setono/sylius-plausible-plugin
 ```
 
-### Step 2: Add the Plausible script identifier trait to your Channel entity
+### Step 2: Register the tag bag bundle
+
+The plugin outputs its JavaScript through [setono/tag-bag-bundle](https://github.com/Setono/tag-bag-bundle).
+If the bundle isn't registered already (Symfony Flex does this for you), add it to `config/bundles.php`:
+
+```php
+# config/bundles.php
+return [
+    // ...
+    Setono\TagBagBundle\SetonoTagBagBundle::class => ['all' => true],
+];
+```
+
+### Step 3: Render the tag bag in your shop layout
+
+Nothing is rendered until you call the tag bag's Twig functions. Add them to your shop layout:
+
+```twig
+{# templates/bundles/SyliusShopBundle/layout.html.twig #}
+<head>
+    {# ... #}
+    {{ setono_tag_bag_render_head() }}
+</head>
+<body>
+{{ setono_tag_bag_render_body_begin() }}
+    {# ... #}
+{{ setono_tag_bag_render_body_end() }}
+{{ setono_tag_bag_render_all() }}
+</body>
+```
+
+> [!IMPORTANT]
+> If you skip this step the plugin will appear to work, but no tracking code is ever written to the page.
+
+### Step 4: Add the Plausible script identifier trait to your Channel entity
 
 ```php
 <?php
@@ -29,18 +63,29 @@ namespace App\Entity\Channel;
 
 use Doctrine\ORM\Mapping as ORM;
 use Setono\SyliusPlausiblePlugin\Model\ChannelInterface as PlausibleChannelInterface;
-use Setono\SyliusPlausiblePlugin\Model\ChannelPlausibleAwareTrait;
+use Setono\SyliusPlausiblePlugin\Model\ChannelTrait as PlausibleChannelTrait;
 use Sylius\Component\Core\Model\Channel as BaseChannel;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'sylius_channel')]
 class Channel extends BaseChannel implements PlausibleChannelInterface
 {
-    use ChannelPlausibleAwareTrait;
+    use PlausibleChannelTrait;
 }
 ```
 
-### Step 3: Import routes
+Make sure the channel resource points at your own class:
+
+```yaml
+# config/packages/sylius_channel.yaml
+sylius_channel:
+    resources:
+        channel:
+            classes:
+                model: App\Entity\Channel\Channel
+```
+
+### Step 5: Import routes
 
 ```yaml
 # config/routes/setono_sylius_plausible.yaml
@@ -48,7 +93,7 @@ setono_sylius_plausible:
     resource: "@SetonoSyliusPlausiblePlugin/Resources/config/routes.yaml"
 ```
 
-### Step 4: Update your database schema
+### Step 6: Update your database schema
 
 ```bash
 bin/console doctrine:migrations:diff
