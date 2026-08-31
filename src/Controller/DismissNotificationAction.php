@@ -9,7 +9,9 @@ use Doctrine\Persistence\ManagerRegistry;
 use Setono\Doctrine\ORMTrait;
 use Setono\SyliusPlausiblePlugin\Factory\NotificationDismissalFactoryInterface;
 use Setono\SyliusPlausiblePlugin\Generator\ChannelConfigurationHashGeneratorInterface;
+use Setono\SyliusPlausiblePlugin\Model\ChannelInterface;
 use Setono\SyliusPlausiblePlugin\Repository\NotificationDismissalRepositoryInterface;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\AdminUserInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,11 +26,13 @@ final class DismissNotificationAction
 
     public const CSRF_TOKEN_ID = 'setono_sylius_plausible_dismiss_notification';
 
+    /** @param ChannelRepositoryInterface<ChannelInterface> $channelRepository */
     public function __construct(
         private readonly Security $security,
         private readonly NotificationDismissalRepositoryInterface $dismissalRepository,
         private readonly ChannelConfigurationHashGeneratorInterface $hashGenerator,
         private readonly NotificationDismissalFactoryInterface $dismissalFactory,
+        private readonly ChannelRepositoryInterface $channelRepository,
         ManagerRegistry $managerRegistry,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {
@@ -50,7 +54,10 @@ final class DismissNotificationAction
         $dismissal = $this->dismissalRepository->findByAdminUser($user);
         $dismissal ??= $this->dismissalFactory->createForAdminUser($user);
 
-        $dismissal->setConfigurationHash($this->hashGenerator->generate());
+        /** @var list<ChannelInterface> $channels */
+        $channels = $this->channelRepository->findAll();
+
+        $dismissal->setConfigurationHash($this->hashGenerator->generate($channels));
 
         $manager = $this->getManager($dismissal);
         $manager->persist($dismissal);

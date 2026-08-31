@@ -6,8 +6,7 @@
             <argument type="service" id="setono_sylius_plausible.repository.notification_dismissal"/>
             <argument type="service" id="security.helper"/>
             <argument type="service" id="Setono\SyliusPlausiblePlugin\Generator\ChannelConfigurationHashGeneratorInterface"/>
-            <argument type="service" id="doctrine"/>
-            <argument>%sylius.model.channel.class%</argument>
+            <argument type="service" id="sylius.repository.channel"/>
         </service>
 
         <service id="Setono\SyliusPlausiblePlugin\Checker\NotificationCheckerInterface"
