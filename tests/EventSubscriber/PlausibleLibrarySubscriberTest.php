@@ -12,6 +12,9 @@ use Setono\SyliusPlausiblePlugin\Model\ChannelInterface;
 use Setono\TagBag\Tag\InlineScriptTag;
 use Setono\TagBag\Tag\ScriptTag;
 use Setono\TagBag\TagBagInterface;
+use Sylius\Bundle\AdminBundle\SectionResolver\AdminSection;
+use Sylius\Bundle\CoreBundle\SectionResolver\SectionProviderInterface;
+use Sylius\Bundle\ShopBundle\SectionResolver\ShopSection;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Context\ChannelNotFoundException;
 use Sylius\Component\Core\Model\ChannelInterface as CoreChannelInterface;
@@ -26,6 +29,14 @@ use Symfony\Component\HttpKernel\KernelEvents;
 final class PlausibleLibrarySubscriberTest extends TestCase
 {
     use ProphecyTrait;
+
+    private function shopSectionProvider(): SectionProviderInterface
+    {
+        $sectionProvider = $this->prophesize(SectionProviderInterface::class);
+        $sectionProvider->getSection()->willReturn(new ShopSection());
+
+        return $sectionProvider->reveal();
+    }
 
     /**
      * @test
@@ -59,7 +70,12 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://plausible.io',
+            $this->shopSectionProvider(),
+        );
         $subscriber->add($requestEvent);
     }
 
@@ -89,6 +105,69 @@ final class PlausibleLibrarySubscriberTest extends TestCase
             $tagBag->reveal(),
             $channelContext->reveal(),
             'https://analytics.example.com',
+            $this->shopSectionProvider(),
+        );
+        $subscriber->add($requestEvent);
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_add_tags_in_the_admin_section(): void
+    {
+        $channelContext = $this->prophesize(ChannelContextInterface::class);
+        $channelContext->getChannel()->shouldNotBeCalled();
+
+        $tagBag = $this->prophesize(TagBagInterface::class);
+        $tagBag->add(Argument::any())->shouldNotBeCalled();
+
+        $sectionProvider = $this->prophesize(SectionProviderInterface::class);
+        $sectionProvider->getSection()->willReturn(new AdminSection());
+
+        $request = new Request();
+        $request->headers->set('Accept', 'text/html');
+
+        $kernel = $this->prophesize(HttpKernelInterface::class);
+        $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
+
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://plausible.io',
+            $sectionProvider->reveal(),
+        );
+        $subscriber->add($requestEvent);
+    }
+
+    /**
+     * @test
+     */
+    public function it_adds_tags_in_the_shop_section(): void
+    {
+        $channel = $this->prophesize(ChannelInterface::class);
+        $channel->getPlausibleScriptIdentifier()->willReturn('pa-test123');
+
+        $channelContext = $this->prophesize(ChannelContextInterface::class);
+        $channelContext->getChannel()->willReturn($channel->reveal());
+
+        $tagBag = $this->prophesize(TagBagInterface::class);
+        $tagBag->add(Argument::type(ScriptTag::class))->shouldBeCalled();
+        $tagBag->add(Argument::type(InlineScriptTag::class))->shouldBeCalled();
+
+        $sectionProvider = $this->prophesize(SectionProviderInterface::class);
+        $sectionProvider->getSection()->willReturn(new ShopSection());
+
+        $request = new Request();
+        $request->headers->set('Accept', 'text/html');
+
+        $kernel = $this->prophesize(HttpKernelInterface::class);
+        $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
+
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://plausible.io',
+            $sectionProvider->reveal(),
         );
         $subscriber->add($requestEvent);
     }
@@ -109,7 +188,12 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::SUB_REQUEST);
 
-        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://plausible.io',
+            $this->shopSectionProvider(),
+        );
         $subscriber->add($requestEvent);
     }
 
@@ -130,7 +214,12 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://plausible.io',
+            $this->shopSectionProvider(),
+        );
         $subscriber->add($requestEvent);
     }
 
@@ -150,7 +239,12 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://plausible.io',
+            $this->shopSectionProvider(),
+        );
         $subscriber->add($requestEvent);
     }
 
@@ -171,7 +265,12 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://plausible.io',
+            $this->shopSectionProvider(),
+        );
         $subscriber->add($requestEvent);
     }
 
@@ -194,7 +293,12 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://plausible.io',
+            $this->shopSectionProvider(),
+        );
         $subscriber->add($requestEvent);
     }
 
@@ -218,7 +322,12 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://plausible.io',
+            $this->shopSectionProvider(),
+        );
         $subscriber->add($requestEvent);
     }
 
@@ -242,7 +351,12 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $kernel = $this->prophesize(HttpKernelInterface::class);
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $subscriber = new PlausibleLibrarySubscriber($tagBag->reveal(), $channelContext->reveal());
+        $subscriber = new PlausibleLibrarySubscriber(
+            $tagBag->reveal(),
+            $channelContext->reveal(),
+            'https://plausible.io',
+            $this->shopSectionProvider(),
+        );
         $subscriber->add($requestEvent);
     }
 }
