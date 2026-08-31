@@ -20,3 +20,4 @@ setono_sylius_plausible:
     form:
         channel:
             plausible_script_identifier: Script Plausible
+            plausible_script_identifier_placeholder: '%identifier%, un URL completo o uno snippet HTML'
