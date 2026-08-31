@@ -120,6 +120,66 @@ final class PopulateOrderRelatedPropertiesSubscriberTest extends TestCase
     }
 
     /**
+     * On the thank you page the completed order is no longer in the 'cart' state, so the cart
+     * context returns either a fresh cart or, worse, an unrelated abandoned cart belonging to
+     * the same customer. The order carried on the event must win.
+     *
+     * @test
+     */
+    public function it_prefers_the_order_carried_on_the_event_over_the_cart(): void
+    {
+        $completedOrder = $this->prophesize(OrderInterface::class);
+        $completedOrder->getId()->willReturn(999);
+        $completedOrder->getNumber()->willReturn('000000999');
+        $completedOrder->getTotal()->willReturn(25000);
+        $completedOrder->getTaxTotal()->willReturn(0);
+        $completedOrder->getShippingTotal()->willReturn(0);
+        $completedOrder->getOrderPromotionTotal()->willReturn(0);
+        $completedOrder->getLastPayment()->willReturn(null);
+        $completedOrder->getShipments()->willReturn(new ArrayCollection());
+        $completedOrder->getPromotionCoupon()->willReturn(null);
+
+        $cartContext = $this->prophesize(CartContextInterface::class);
+        $cartContext->getCart()->shouldNotBeCalled();
+
+        $event = (new Event(Events::PURCHASE))->setOrder($completedOrder->reveal());
+
+        $subscriber = new PopulateOrderRelatedPropertiesSubscriber($cartContext->reveal());
+        $subscriber->populate($event);
+
+        self::assertSame(999, $event->getProperty('order_id'));
+        self::assertSame('000000999', $event->getProperty('order_number'));
+        self::assertSame(250.0, $event->getProperty('order_total'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_falls_back_to_the_cart_when_the_event_carries_no_order(): void
+    {
+        $order = $this->prophesize(OrderInterface::class);
+        $order->getId()->willReturn(123);
+        $order->getNumber()->willReturn('000000123');
+        $order->getTotal()->willReturn(10000);
+        $order->getTaxTotal()->willReturn(0);
+        $order->getShippingTotal()->willReturn(0);
+        $order->getOrderPromotionTotal()->willReturn(0);
+        $order->getLastPayment()->willReturn(null);
+        $order->getShipments()->willReturn(new ArrayCollection());
+        $order->getPromotionCoupon()->willReturn(null);
+
+        $cartContext = $this->prophesize(CartContextInterface::class);
+        $cartContext->getCart()->willReturn($order->reveal())->shouldBeCalled();
+
+        $event = new Event(Events::BEGIN_CHECKOUT);
+
+        $subscriber = new PopulateOrderRelatedPropertiesSubscriber($cartContext->reveal());
+        $subscriber->populate($event);
+
+        self::assertSame(123, $event->getProperty('order_id'));
+    }
+
+    /**
      * @test
      */
     public function it_handles_missing_payment_and_shipping_methods(): void
