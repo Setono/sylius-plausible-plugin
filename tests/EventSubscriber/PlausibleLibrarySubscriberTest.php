@@ -73,8 +73,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://plausible.io',
             $this->shopSectionProvider(),
+            'https://plausible.io',
         );
         $subscriber->add($requestEvent);
     }
@@ -104,8 +104,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://analytics.example.com',
             $this->shopSectionProvider(),
+            'https://analytics.example.com',
         );
         $subscriber->add($requestEvent);
     }
@@ -133,8 +133,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://plausible.io',
             $sectionProvider->reveal(),
+            'https://plausible.io',
         );
         $subscriber->add($requestEvent);
     }
@@ -166,8 +166,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://plausible.io',
             $sectionProvider->reveal(),
+            'https://plausible.io',
         );
         $subscriber->add($requestEvent);
     }
@@ -191,8 +191,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://plausible.io',
             $this->shopSectionProvider(),
+            'https://plausible.io',
         );
         $subscriber->add($requestEvent);
     }
@@ -217,8 +217,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://plausible.io',
             $this->shopSectionProvider(),
+            'https://plausible.io',
         );
         $subscriber->add($requestEvent);
     }
@@ -242,8 +242,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://plausible.io',
             $this->shopSectionProvider(),
+            'https://plausible.io',
         );
         $subscriber->add($requestEvent);
     }
@@ -268,8 +268,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://plausible.io',
             $this->shopSectionProvider(),
+            'https://plausible.io',
         );
         $subscriber->add($requestEvent);
     }
@@ -296,8 +296,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://plausible.io',
             $this->shopSectionProvider(),
+            'https://plausible.io',
         );
         $subscriber->add($requestEvent);
     }
@@ -325,8 +325,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://plausible.io',
             $this->shopSectionProvider(),
+            'https://plausible.io',
         );
         $subscriber->add($requestEvent);
     }
@@ -354,8 +354,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $subscriber = new PlausibleLibrarySubscriber(
             $tagBag->reveal(),
             $channelContext->reveal(),
-            'https://plausible.io',
             $this->shopSectionProvider(),
+            'https://plausible.io',
         );
         $subscriber->add($requestEvent);
     }
