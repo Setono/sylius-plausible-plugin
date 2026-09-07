@@ -10,10 +10,11 @@
         <div class="ui segment">
             <h4 class="ui header">{{ 'setono_sylius_plausible.ui.script_format_help_title'|trans }}</h4>
             <p>{{ 'setono_sylius_plausible.ui.script_format_help_description'|trans }}</p>
+            {% set example = {'%identifier%': constant('Setono\\SyliusPlausiblePlugin\\Form\\Type\\ChannelPlausibleType::EXAMPLE_IDENTIFIER')} %}
             <ul class="list">
-                <li>{{ 'setono_sylius_plausible.ui.script_format_identifier'|trans }}</li>
-                <li>{{ 'setono_sylius_plausible.ui.script_format_url'|trans }}</li>
-                <li>{{ 'setono_sylius_plausible.ui.script_format_html'|trans }}</li>
+                <li>{{ 'setono_sylius_plausible.ui.script_format_identifier'|trans(example) }}</li>
+                <li>{{ 'setono_sylius_plausible.ui.script_format_url'|trans(example) }}</li>
+                <li>{{ 'setono_sylius_plausible.ui.script_format_html'|trans(example) }}</li>
             </ul>
         </div>
     </div>

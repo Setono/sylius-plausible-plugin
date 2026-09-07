@@ -15,10 +15,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class ChannelPlausibleType extends AbstractType
 {
     /**
-     * Shown in the placeholder so the field is recognisable: this is the shape of the identifier
-     * people see in their Plausible dashboard.
+     * The example shown in the placeholder and in the help panel next to the field, so the field
+     * is recognisable: this is the shape of the identifier people see in their Plausible dashboard.
+     * Referenced from the form template as well, so it lives in exactly one place.
      */
-    private const EXAMPLE_IDENTIFIER = 'pa-hb0WlWkUb5U3qhSS-vd-a';
+    public const EXAMPLE_IDENTIFIER = 'pa-hb0WlWkUb5U3qhSS-vd-a';
 
     public function __construct(private readonly string $dataClass)
     {
