@@ -14,6 +14,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /** @extends AbstractType<ChannelInterface> */
 final class ChannelPlausibleType extends AbstractType
 {
+    /**
+     * Shown in the placeholder so the field is recognisable: this is the shape of the identifier
+     * people see in their Plausible dashboard.
+     */
+    private const EXAMPLE_IDENTIFIER = 'pa-hb0WlWkUb5U3qhSS-vd-a';
+
     public function __construct(private readonly string $dataClass)
     {
     }
@@ -24,9 +30,10 @@ final class ChannelPlausibleType extends AbstractType
             'label' => 'setono_sylius_plausible.form.channel.plausible_script_identifier',
             'required' => false,
             'attr' => [
-                'placeholder' => 'pa-hb0WlWkUb5U3qhSS-vd-a or full URL or HTML snippet',
+                'placeholder' => 'setono_sylius_plausible.form.channel.plausible_script_identifier_placeholder',
                 'rows' => 5,
             ],
+            'attr_translation_parameters' => ['%identifier%' => self::EXAMPLE_IDENTIFIER],
         ]);
 
         $builder->get('plausibleScriptIdentifier')->addModelTransformer(new ScriptIdentifierTransformer());
