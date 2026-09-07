@@ -244,6 +244,14 @@ jobs:
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
 
+            -   name: "Setup Node"
+                uses: "actions/setup-node@v4"
+                with:
+                    node-version-file: "tests/Application/.nvmrc"
+
+            -   name: "Build assets" # the shop layout renders Encore entrypoints, so a storefront request needs a build
+                run: "(cd tests/Application && yarn install && yarn build)"
+
             -   name: "Lint container"
                 run: "(cd tests/Application && bin/console lint:container)"
 
@@ -290,6 +298,14 @@ jobs:
                 uses: "ramsey/composer-install@v3"
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
+
+            -   name: "Setup Node"
+                uses: "actions/setup-node@v4"
+                with:
+                    node-version-file: "tests/Application/.nvmrc"
+
+            -   name: "Build assets" # the shop layout renders Encore entrypoints, so a storefront request needs a build
+                run: "(cd tests/Application && yarn install && yarn build)"
 
             -   name: "Create database"
                 run: "(cd tests/Application && bin/console doctrine:database:create)"
