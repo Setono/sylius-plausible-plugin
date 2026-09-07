@@ -54,18 +54,30 @@ final class TranslationsTest extends TestCase
      */
     public function every_locale_keeps_the_identifier_placeholder_token(): void
     {
-        $key = 'setono_sylius_plausible.form.channel.plausible_script_identifier_placeholder';
+        $keys = [
+            'setono_sylius_plausible.form.channel.plausible_script_identifier_placeholder',
+            'setono_sylius_plausible.ui.script_format_identifier',
+            'setono_sylius_plausible.ui.script_format_url',
+            'setono_sylius_plausible.ui.script_format_html',
+        ];
 
-        foreach (self::localesFor('messages') as $locale => $keys) {
-            self::assertArrayHasKey($key, $keys, sprintf('Locale "%s" is missing the placeholder', $locale));
+        foreach (self::localesFor('messages') as $locale => $translations) {
+            foreach ($keys as $key) {
+                self::assertArrayHasKey($key, $translations, sprintf('Locale "%s" is missing %s', $locale, $key));
 
-            $placeholder = $keys[$key];
-            self::assertIsString($placeholder);
-            self::assertStringContainsString(
-                '%identifier%',
-                $placeholder,
-                sprintf('The "%s" placeholder dropped the %%identifier%% token', $locale),
-            );
+                $translation = $translations[$key];
+                self::assertIsString($translation);
+                self::assertStringContainsString(
+                    '%identifier%',
+                    $translation,
+                    sprintf('The "%s" translation of %s dropped the %%identifier%% token', $locale, $key),
+                );
+                self::assertStringNotContainsString(
+                    'pa-hb0WlWkUb5U3qhSS-vd-a',
+                    $translation,
+                    sprintf('The "%s" translation of %s still hardcodes the example', $locale, $key),
+                );
+            }
         }
     }
 

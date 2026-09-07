@@ -10,9 +10,9 @@ setono_sylius_plausible:
         not_configured: Nicht konfiguriert
         script_format_help_title: Akzeptierte Formate
         script_format_help_description: 'Sie können das Plausible-Skript in einem der folgenden Formate eingeben:'
-        script_format_identifier: 'Nur Kennung: pa-hb0WlWkUb5U3qhSS-vd-a'
-        script_format_url: 'Vollständige URL: https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js'
-        script_format_html: 'HTML-Snippet: <script async src="https://plausible.io/js/pa-hb0WlWkUb5U3qhSS-vd-a.js"></script>'
+        script_format_identifier: 'Nur Kennung: %identifier%'
+        script_format_url: 'Vollständige URL: https://plausible.io/js/%identifier%.js'
+        script_format_html: 'HTML-Snippet: <script async src="https://plausible.io/js/%identifier%.js"></script>'
         notification:
             title: Plausible Analytics nicht vollständig konfiguriert
             message: Nicht alle Kanäle haben Plausible Analytics konfiguriert. Das Tracking funktioniert möglicherweise nicht für einige Kanäle.
