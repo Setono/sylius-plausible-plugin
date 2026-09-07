@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusPlausiblePlugin\Generator\ChannelConfigurationHashGenerator;
 use Setono\SyliusPlausiblePlugin\Model\ChannelInterface;
-use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 
 /**
  * @covers \Setono\SyliusPlausiblePlugin\Generator\ChannelConfigurationHashGenerator
@@ -30,13 +29,12 @@ final class ChannelConfigurationHashGeneratorTest extends TestCase
         $channel2->getCode()->willReturn('MOBILE');
         $channel2->getPlausibleScriptIdentifier()->willReturn('pa-xyz789');
 
-        $repository = $this->prophesize(ChannelRepositoryInterface::class);
-        $repository->findAll()->willReturn([$channel1->reveal(), $channel2->reveal()]);
+        $channels = [$channel1->reveal(), $channel2->reveal()];
 
-        $generator = new ChannelConfigurationHashGenerator($repository->reveal());
+        $generator = new ChannelConfigurationHashGenerator();
 
-        $hash1 = $generator->generate();
-        $hash2 = $generator->generate();
+        $hash1 = $generator->generate($channels);
+        $hash2 = $generator->generate($channels);
 
         self::assertSame($hash1, $hash2);
         self::assertSame(64, strlen($hash1)); // SHA256 produces 64 hex characters
@@ -51,22 +49,20 @@ final class ChannelConfigurationHashGeneratorTest extends TestCase
         $channel->getCode()->willReturn('WEB');
         $channel->getPlausibleScriptIdentifier()->willReturn('pa-abc123');
 
-        $repository = $this->prophesize(ChannelRepositoryInterface::class);
-        $repository->findAll()->willReturn([$channel->reveal()]);
+        $channels = [$channel->reveal()];
 
-        $generator = new ChannelConfigurationHashGenerator($repository->reveal());
-        $hash1 = $generator->generate();
+        $generator = new ChannelConfigurationHashGenerator();
+        $hash1 = $generator->generate($channels);
 
         // Change the configuration
         $channel2 = $this->prophesize(ChannelInterface::class);
         $channel2->getCode()->willReturn('WEB');
         $channel2->getPlausibleScriptIdentifier()->willReturn('pa-different');
 
-        $repository2 = $this->prophesize(ChannelRepositoryInterface::class);
-        $repository2->findAll()->willReturn([$channel2->reveal()]);
+        $channelsB = [$channel2->reveal()];
 
-        $generator2 = new ChannelConfigurationHashGenerator($repository2->reveal());
-        $hash2 = $generator2->generate();
+        $generator2 = new ChannelConfigurationHashGenerator();
+        $hash2 = $generator2->generate($channelsB);
 
         self::assertNotSame($hash1, $hash2);
     }
@@ -84,16 +80,14 @@ final class ChannelConfigurationHashGeneratorTest extends TestCase
         $channel2->getCode()->willReturn('MOBILE');
         $channel2->getPlausibleScriptIdentifier()->willReturn('pa-xyz789');
 
-        $repository1 = $this->prophesize(ChannelRepositoryInterface::class);
-        $repository1->findAll()->willReturn([$channel1->reveal(), $channel2->reveal()]);
+        $channelsA = [$channel1->reveal(), $channel2->reveal()];
 
-        $repository2 = $this->prophesize(ChannelRepositoryInterface::class);
-        $repository2->findAll()->willReturn([$channel2->reveal(), $channel1->reveal()]);
+        $channelsB = [$channel2->reveal(), $channel1->reveal()];
 
-        $generator1 = new ChannelConfigurationHashGenerator($repository1->reveal());
-        $generator2 = new ChannelConfigurationHashGenerator($repository2->reveal());
+        $generator1 = new ChannelConfigurationHashGenerator();
+        $generator2 = new ChannelConfigurationHashGenerator();
 
-        self::assertSame($generator1->generate(), $generator2->generate());
+        self::assertSame($generator1->generate($channelsA), $generator2->generate($channelsB));
     }
 
     /**
@@ -105,12 +99,11 @@ final class ChannelConfigurationHashGeneratorTest extends TestCase
         $channel->getCode()->willReturn('WEB');
         $channel->getPlausibleScriptIdentifier()->willReturn(null);
 
-        $repository = $this->prophesize(ChannelRepositoryInterface::class);
-        $repository->findAll()->willReturn([$channel->reveal()]);
+        $channels = [$channel->reveal()];
 
-        $generator = new ChannelConfigurationHashGenerator($repository->reveal());
+        $generator = new ChannelConfigurationHashGenerator();
 
-        $hash = $generator->generate();
+        $hash = $generator->generate($channels);
 
         self::assertSame(64, strlen($hash));
     }
@@ -124,12 +117,11 @@ final class ChannelConfigurationHashGeneratorTest extends TestCase
         $channel->getCode()->willReturn(null);
         $channel->getPlausibleScriptIdentifier()->willReturn('pa-abc123');
 
-        $repository = $this->prophesize(ChannelRepositoryInterface::class);
-        $repository->findAll()->willReturn([$channel->reveal()]);
+        $channels = [$channel->reveal()];
 
-        $generator = new ChannelConfigurationHashGenerator($repository->reveal());
+        $generator = new ChannelConfigurationHashGenerator();
 
-        $hash = $generator->generate();
+        $hash = $generator->generate($channels);
 
         self::assertSame(64, strlen($hash));
     }
