@@ -114,8 +114,8 @@ bin/console doctrine:migrations:migrate
 Go to **Marketing > Plausible** in the admin panel and paste the identifier, the full script URL or
 the whole HTML snippet for each channel — all three are accepted and normalized to the identifier.
 
-Until your channels are configured, a notification on the admin dashboard reminds you which ones
-are still missing.
+Until every enabled channel is configured, a notification on the admin dashboard reminds you which
+ones are still missing.
 
 ## Renamed classes
 
