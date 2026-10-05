@@ -57,14 +57,16 @@ final class PlausibleLibraryTest extends WebTestCase
     /**
      * @test
      */
-    public function it_adds_nothing_for_a_channel_without_an_identifier(): void
+    public function it_defines_plausible_but_loads_no_library_for_a_channel_without_an_identifier(): void
     {
         $this->createChannel(null);
 
         $html = $this->requestHomepage();
 
+        // events may still be rendered on this page, so the function they call must exist, but
+        // nothing that sends data to Plausible is loaded
+        self::assertStringContainsString('window.plausible=window.plausible||function()', $html);
         self::assertStringNotContainsString('plausible.io/js/', $html);
-        self::assertStringNotContainsString('window.plausible=', $html);
     }
 
     private function requestHomepage(): string

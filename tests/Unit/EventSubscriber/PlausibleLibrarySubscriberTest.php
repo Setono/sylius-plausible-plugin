@@ -251,13 +251,14 @@ final class PlausibleLibrarySubscriberTest extends TestCase
     /**
      * @test
      */
-    public function it_does_not_add_tags_when_channel_not_found(): void
+    public function it_adds_only_the_init_snippet_when_channel_not_found(): void
     {
         $channelContext = $this->prophesize(ChannelContextInterface::class);
         $channelContext->getChannel()->willThrow(new ChannelNotFoundException());
 
         $tagBag = $this->prophesize(TagBagInterface::class);
-        $tagBag->add(Argument::any())->shouldNotBeCalled();
+        $tagBag->add(Argument::type(InlineScriptTag::class))->shouldBeCalledOnce();
+        $tagBag->add(Argument::type(ScriptTag::class))->shouldNotBeCalled();
 
         $request = new Request();
         $request->headers->set('Accept', 'text/html');
@@ -277,7 +278,7 @@ final class PlausibleLibrarySubscriberTest extends TestCase
     /**
      * @test
      */
-    public function it_does_not_add_tags_when_channel_does_not_implement_plugin_interface(): void
+    public function it_adds_only_the_init_snippet_when_channel_does_not_implement_plugin_interface(): void
     {
         $channel = $this->prophesize(CoreChannelInterface::class);
 
@@ -285,7 +286,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $channelContext->getChannel()->willReturn($channel->reveal());
 
         $tagBag = $this->prophesize(TagBagInterface::class);
-        $tagBag->add(Argument::any())->shouldNotBeCalled();
+        $tagBag->add(Argument::type(InlineScriptTag::class))->shouldBeCalledOnce();
+        $tagBag->add(Argument::type(ScriptTag::class))->shouldNotBeCalled();
 
         $request = new Request();
         $request->headers->set('Accept', 'text/html');
@@ -305,7 +307,7 @@ final class PlausibleLibrarySubscriberTest extends TestCase
     /**
      * @test
      */
-    public function it_does_not_add_tags_when_identifier_is_null(): void
+    public function it_adds_only_the_init_snippet_when_identifier_is_null(): void
     {
         $channel = $this->prophesize(ChannelInterface::class);
         $channel->getPlausibleScriptIdentifier()->willReturn(null);
@@ -314,7 +316,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $channelContext->getChannel()->willReturn($channel->reveal());
 
         $tagBag = $this->prophesize(TagBagInterface::class);
-        $tagBag->add(Argument::any())->shouldNotBeCalled();
+        $tagBag->add(Argument::type(InlineScriptTag::class))->shouldBeCalledOnce();
+        $tagBag->add(Argument::type(ScriptTag::class))->shouldNotBeCalled();
 
         $request = new Request();
         $request->headers->set('Accept', 'text/html');
@@ -334,7 +337,7 @@ final class PlausibleLibrarySubscriberTest extends TestCase
     /**
      * @test
      */
-    public function it_does_not_add_tags_when_identifier_is_empty_string(): void
+    public function it_adds_only_the_init_snippet_when_identifier_is_empty_string(): void
     {
         $channel = $this->prophesize(ChannelInterface::class);
         $channel->getPlausibleScriptIdentifier()->willReturn('');
@@ -343,7 +346,8 @@ final class PlausibleLibrarySubscriberTest extends TestCase
         $channelContext->getChannel()->willReturn($channel->reveal());
 
         $tagBag = $this->prophesize(TagBagInterface::class);
-        $tagBag->add(Argument::any())->shouldNotBeCalled();
+        $tagBag->add(Argument::type(InlineScriptTag::class))->shouldBeCalledOnce();
+        $tagBag->add(Argument::type(ScriptTag::class))->shouldNotBeCalled();
 
         $request = new Request();
         $request->headers->set('Accept', 'text/html');
