@@ -53,18 +53,19 @@ final class PlausibleLibrarySubscriber implements EventSubscriberInterface
             return;
         }
 
-        try {
-            $channel = $this->channelContext->getChannel();
-        } catch (ChannelNotFoundException) {
-            return;
-        }
+        // The init snippet defines plausible() and is added on every shop page. Events can be rendered
+        // on any page - the begin checkout event is created on a redirect and rendered on the next
+        // one - so the function they call has to exist wherever they end up. Until the library loads,
+        // calls are only queued in the browser; nothing is sent to Plausible.
+        $this->tagBag->add(
+            InlineScriptTag::create('window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()')
+                ->withPriority(99)
+                ->withSection(TagInterface::SECTION_HEAD),
+        );
 
-        if (!$channel instanceof ChannelInterface) {
-            return;
-        }
-
-        $identifier = $channel->getPlausibleScriptIdentifier();
-        if (null === $identifier || '' === $identifier) {
+        // The library is what actually sends data, so it is only added for channels where Plausible is set up
+        $identifier = $this->resolveScriptIdentifier();
+        if (null === $identifier) {
             return;
         }
 
@@ -74,11 +75,22 @@ final class PlausibleLibrarySubscriber implements EventSubscriberInterface
                 ->withSection(TagInterface::SECTION_HEAD)
                 ->withFingerprint(self::TAG_FINGERPRINT),
         );
+    }
 
-        $this->tagBag->add(
-            InlineScriptTag::create('window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()')
-                ->withPriority(99)
-                ->withSection(TagInterface::SECTION_HEAD),
-        );
+    private function resolveScriptIdentifier(): ?string
+    {
+        try {
+            $channel = $this->channelContext->getChannel();
+        } catch (ChannelNotFoundException) {
+            return null;
+        }
+
+        if (!$channel instanceof ChannelInterface) {
+            return null;
+        }
+
+        $identifier = $channel->getPlausibleScriptIdentifier();
+
+        return null === $identifier || '' === $identifier ? null : $identifier;
     }
 }
