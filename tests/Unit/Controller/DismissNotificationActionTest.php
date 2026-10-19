@@ -74,6 +74,7 @@ final class DismissNotificationActionTest extends TestCase
 
         self::assertInstanceOf(JsonResponse::class, $response);
         self::assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        self::assertSame(['success' => false, 'error' => 'Not authenticated'], json_decode((string) $response->getContent(), true));
     }
 
     /**
@@ -262,6 +263,7 @@ final class DismissNotificationActionTest extends TestCase
         $response = $action($this->requestWithToken('wrong-token'));
 
         self::assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+        self::assertSame(['success' => false, 'error' => 'Invalid CSRF token'], json_decode((string) $response->getContent(), true));
     }
 
     /**

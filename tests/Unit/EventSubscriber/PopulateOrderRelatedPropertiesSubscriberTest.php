@@ -18,6 +18,7 @@ use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Core\Model\ShippingMethodInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Order\Context\CartNotFoundException;
+use Sylius\Component\Order\Model\OrderInterface as BaseOrderInterface;
 
 /**
  * @covers \Setono\SyliusPlausiblePlugin\EventSubscriber\PopulateOrderRelatedPropertiesSubscriber
@@ -91,6 +92,22 @@ final class PopulateOrderRelatedPropertiesSubscriberTest extends TestCase
     {
         $cartContext = $this->prophesize(CartContextInterface::class);
         $cartContext->getCart()->willThrow(new CartNotFoundException());
+
+        $event = new Event(Events::BEGIN_CHECKOUT);
+
+        $subscriber = new PopulateOrderRelatedPropertiesSubscriber($cartContext->reveal());
+        $subscriber->populate($event);
+
+        self::assertFalse($event->hasProperty('order_id'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_nothing_when_the_cart_is_not_a_core_order(): void
+    {
+        $cartContext = $this->prophesize(CartContextInterface::class);
+        $cartContext->getCart()->willReturn($this->prophesize(BaseOrderInterface::class)->reveal());
 
         $event = new Event(Events::BEGIN_CHECKOUT);
 
@@ -207,5 +224,36 @@ final class PopulateOrderRelatedPropertiesSubscriberTest extends TestCase
         self::assertNull($event->getProperty('payment_method'));
         self::assertNull($event->getProperty('shipping_method'));
         self::assertNull($event->getProperty('coupon_code'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_handles_a_payment_and_a_shipment_without_a_method(): void
+    {
+        $payment = $this->prophesize(PaymentInterface::class);
+        $payment->getMethod()->willReturn(null);
+
+        $shipment = $this->prophesize(ShipmentInterface::class);
+        $shipment->getMethod()->willReturn(null);
+
+        $order = $this->prophesize(OrderInterface::class);
+        $order->getId()->willReturn(123);
+        $order->getNumber()->willReturn('000000123');
+        $order->getTotal()->willReturn(10000);
+        $order->getTaxTotal()->willReturn(1000);
+        $order->getShippingTotal()->willReturn(500);
+        $order->getOrderPromotionTotal()->willReturn(0);
+        $order->getLastPayment()->willReturn($payment->reveal());
+        $order->getShipments()->willReturn(new ArrayCollection([$shipment->reveal()]));
+        $order->getPromotionCoupon()->willReturn(null);
+
+        $event = (new Event(Events::PURCHASE))->setOrder($order->reveal());
+
+        $subscriber = new PopulateOrderRelatedPropertiesSubscriber($this->prophesize(CartContextInterface::class)->reveal());
+        $subscriber->populate($event);
+
+        self::assertNull($event->getProperty('payment_method'));
+        self::assertNull($event->getProperty('shipping_method'));
     }
 }
