@@ -16,6 +16,9 @@ final class Events
 
     final public const SELECT_PAYMENT_METHOD = 'Select Payment Method';
 
+    /**
+     * @codeCoverageIgnore this class only holds constants and cannot be instantiated
+     */
     private function __construct()
     {
     }
