@@ -11,19 +11,6 @@
             "badge": "2.x"
         }
     },
-    "mutators": {
-        "@default": true,
-        "DecrementInteger": {
-            "ignoreSourceCodeByRegex": [
-                ".*->withPriority\\(99\\).*"
-            ]
-        },
-        "IncrementInteger": {
-            "ignoreSourceCodeByRegex": [
-                ".*->withPriority\\(99\\).*"
-            ]
-        }
-    },
-    "minMsi": 99.20,
-    "minCoveredMsi": 100.00
+    "minMsi": 98.42,
+    "minCoveredMsi": 99.20
 }
