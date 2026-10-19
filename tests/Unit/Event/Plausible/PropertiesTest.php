@@ -6,6 +6,7 @@ namespace Setono\SyliusPlausiblePlugin\Tests\Unit\Event\Plausible;
 
 use PHPUnit\Framework\TestCase;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Properties;
+use Webmozart\Assert\InvalidArgumentException;
 
 /**
  * @covers \Setono\SyliusPlausiblePlugin\Event\Plausible\Properties
@@ -65,5 +66,65 @@ final class PropertiesTest extends TestCase
 
         unset($properties['property1']);
         self::assertFalse(isset($properties['property1']));
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_empty_until_a_property_is_set(): void
+    {
+        $properties = new Properties();
+        self::assertTrue($properties->isEmpty());
+
+        $properties->set('property1', null);
+        self::assertFalse($properties->isEmpty());
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_when_getting_a_property_that_does_not_exist(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The property with key "property1" does not exist');
+
+        (new Properties())->get('property1');
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_when_unsetting_a_property_that_does_not_exist(): void
+    {
+        $properties = new Properties();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The property with key "property1" does not exist');
+
+        unset($properties['property1']);
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider invalidOffsets
+     */
+    public function it_only_accepts_non_empty_string_offsets(?string $offset): void
+    {
+        $properties = new Properties();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Properties are key value pairs, where the key must be a string');
+
+        $properties[$offset] = 'value';
+    }
+
+    /**
+     * @return iterable<string, array{string|null}>
+     */
+    public static function invalidOffsets(): iterable
+    {
+        yield 'empty string' => [''];
+        yield 'appending without a key' => [null];
     }
 }

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPlausiblePlugin\Tests\Unit\EventSubscriber;
 
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\AbstractLogger;
+use Psr\Log\LoggerInterface;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Event;
 use Setono\SyliusPlausiblePlugin\Event\Plausible\Events;
 use Setono\SyliusPlausiblePlugin\EventSubscriber\PlausibleEventSubscriber;
@@ -14,6 +17,7 @@ use Setono\TagBag\Tag\TagInterface;
 use Setono\TagBag\TagBagInterface;
 use Sylius\Component\Core\Model\Order;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Webmozart\Assert\Assert;
 
@@ -22,6 +26,8 @@ use Webmozart\Assert\Assert;
  */
 final class PlausibleEventSubscriberTest extends KernelTestCase
 {
+    use ProphecyTrait;
+
     private PlausibleEventSubscriber $subscriber;
 
     private TestTagBag $tagBag;
@@ -206,6 +212,50 @@ final class PlausibleEventSubscriberTest extends KernelTestCase
 
         $tag = $this->getTagOrFail();
         self::assertSame('plausible("Purchase", {"props":{"order_id":123}});', $tag->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function it_logs_instead_of_adding_a_tag_when_the_payload_cannot_be_encoded(): void
+    {
+        $event = (new Event(Events::PURCHASE))->setProperty('coupon_code', "\xB1");
+
+        $this->expectErrorToBeLogged($event, NotEncodableValueException::class);
+
+        $this->subscriber->add($event);
+
+        self::assertNull($this->tagBag->getLastTag());
+    }
+
+    /**
+     * The name is not part of the serialized payload, so it is encoded on its own and can fail on its own.
+     *
+     * @test
+     */
+    public function it_logs_instead_of_adding_a_tag_when_the_event_name_cannot_be_encoded(): void
+    {
+        $event = new Event("\xB1");
+
+        $this->expectErrorToBeLogged($event, \JsonException::class);
+
+        $this->subscriber->add($event);
+
+        self::assertNull($this->tagBag->getLastTag());
+    }
+
+    /**
+     * @param class-string<\Throwable> $exceptionClass
+     */
+    private function expectErrorToBeLogged(Event $event, string $exceptionClass): void
+    {
+        $logger = $this->prophesize(LoggerInterface::class);
+        $logger->error('Could not encode event to json', Argument::allOf(
+            Argument::withEntry('event', $event),
+            Argument::withEntry('exception', Argument::type($exceptionClass)),
+        ))->shouldBeCalledOnce();
+
+        $this->subscriber->setLogger($logger->reveal());
     }
 
     private function getTagOrFail(): InlineScriptTag
