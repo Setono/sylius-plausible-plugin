@@ -16,6 +16,8 @@ use Setono\SyliusPlausiblePlugin\EventSubscriber\PurchaseSubscriber;
 use Setono\SyliusPlausiblePlugin\EventSubscriber\SelectPaymentMethodSubscriber;
 use Setono\SyliusPlausiblePlugin\EventSubscriber\SelectShippingMethodSubscriber;
 use Setono\SyliusPlausiblePlugin\Form\Type\ChannelPlausibleType;
+use Setono\SyliusPlausiblePlugin\Model\NotificationDismissal;
+use Setono\SyliusPlausiblePlugin\Repository\NotificationDismissalRepository;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
@@ -208,10 +210,127 @@ final class SetonoSyliusPlausibleExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
+    public function it_trims_whitespace_around_the_script_host(): void
+    {
+        $this->load(['script_host' => " https://analytics.example.com/\n"]);
+
+        $this->assertContainerBuilderHasParameter('setono_sylius_plausible.script_host', 'https://analytics.example.com');
+    }
+
+    /**
+     * @test
+     */
+    public function it_registers_the_notification_dismissal_resource(): void
+    {
+        $this->load();
+
+        $this->assertContainerBuilderHasParameter('setono_sylius_plausible.model.notification_dismissal.class', NotificationDismissal::class);
+        $this->assertContainerBuilderHasParameter('setono_sylius_plausible.repository.notification_dismissal.class', NotificationDismissalRepository::class);
+    }
+
+    /**
+     * @test
+     */
+    public function it_prepends_the_notification_to_the_admin_dashboard(): void
+    {
+        $this->extension()->prepend($this->container);
+
+        self::assertSame([[
+            'events' => [
+                'sylius.admin.dashboard.content' => [
+                    'blocks' => [
+                        'setono_plausible_notification' => [
+                            'template' => '@SetonoSyliusPlausiblePlugin/admin/_notification.html.twig',
+                            'priority' => 100,
+                        ],
+                    ],
+                ],
+            ],
+        ]], $this->container->getExtensionConfig('sylius_ui'));
+    }
+
+    /**
+     * The grid is the channel list the plugin adds to the admin, so its definition is asserted in full.
+     *
+     * @test
+     */
+    public function it_prepends_the_channel_grid(): void
+    {
+        $this->extension()->prepend($this->container);
+
+        self::assertSame([[
+            'grids' => [
+                'setono_sylius_plausible_admin_channel' => [
+                    'driver' => [
+                        'name' => 'doctrine/orm',
+                        'options' => [
+                            'class' => '%sylius.model.channel.class%',
+                        ],
+                    ],
+                    'sorting' => [
+                        'name' => 'asc',
+                    ],
+                    'fields' => [
+                        'name' => [
+                            'type' => 'string',
+                            'label' => 'sylius.ui.name',
+                            'sortable' => null,
+                        ],
+                        'code' => [
+                            'type' => 'string',
+                            'label' => 'sylius.ui.code',
+                            'sortable' => null,
+                        ],
+                        'hostname' => [
+                            'type' => 'string',
+                            'label' => 'sylius.ui.hostname',
+                            'sortable' => null,
+                        ],
+                        'plausibleStatus' => [
+                            'type' => 'twig',
+                            'label' => 'setono_sylius_plausible.ui.plausible_status',
+                            'path' => '.',
+                            'options' => [
+                                'template' => '@SetonoSyliusPlausiblePlugin/admin/channel/grid/field/plausible_status.html.twig',
+                            ],
+                        ],
+                    ],
+                    'actions' => [
+                        'item' => [
+                            'update' => [
+                                'type' => 'update',
+                                'label' => 'setono_sylius_plausible.ui.configure',
+                                'options' => [
+                                    'link' => [
+                                        'route' => 'setono_sylius_plausible_admin_channel_update',
+                                        'parameters' => [
+                                            'id' => 'resource.id',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]], $this->container->getExtensionConfig('sylius_grid'));
+    }
+
+    /**
+     * @test
+     */
     public function it_rejects_a_script_host_without_a_scheme(): void
     {
         $this->expectException(InvalidConfigurationException::class);
 
         $this->load(['script_host' => 'analytics.example.com']);
+    }
+
+    private function extension(): SetonoSyliusPlausibleExtension
+    {
+        $extension = $this->container->getExtension('setono_sylius_plausible');
+        self::assertInstanceOf(SetonoSyliusPlausibleExtension::class, $extension);
+
+        return $extension;
     }
 }

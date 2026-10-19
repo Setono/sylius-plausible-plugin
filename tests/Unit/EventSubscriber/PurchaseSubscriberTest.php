@@ -233,6 +233,10 @@ final class PurchaseSubscriberTest extends TestCase
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
 
+        // a missing order is an expected outcome, not an error worth logging
+        $logger = $this->prophesize(\Psr\Log\LoggerInterface::class);
+        $logger->error(Argument::cetera())->shouldNotBeCalled();
+
         $session = new Session(new MockArraySessionStorage());
         $session->start();
         $session->set('sylius_order_id', 123);
@@ -245,6 +249,7 @@ final class PurchaseSubscriberTest extends TestCase
         $requestEvent = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $subscriber = new PurchaseSubscriber($eventDispatcher->reveal(), $orderRepository->reveal());
+        $subscriber->setLogger($logger->reveal());
         $subscriber->track($requestEvent);
     }
 

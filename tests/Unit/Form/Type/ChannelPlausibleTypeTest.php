@@ -97,13 +97,7 @@ final class ChannelPlausibleTypeTest extends TypeTestCase
      */
     public function it_offers_the_example_identifier_in_the_placeholder(): void
     {
-        $view = $this->factory->create(ChannelPlausibleType::class, new Channel())->createView();
-        $field = $view->children['plausibleScriptIdentifier'];
-        self::assertInstanceOf(FormView::class, $field);
-
-        // FormView::$vars is an untyped public property, so narrow it before reading offsets
-        $vars = $field->vars;
-        self::assertIsArray($vars);
+        $vars = $this->fieldVars();
 
         $attr = $vars['attr'] ?? null;
         self::assertIsArray($attr);
@@ -115,6 +109,30 @@ final class ChannelPlausibleTypeTest extends TypeTestCase
             ['%identifier%' => 'pa-hb0WlWkUb5U3qhSS-vd-a'],
             $vars['attr_translation_parameters'] ?? null,
         );
+    }
+
+    /**
+     * @test
+     */
+    public function it_renders_a_labelled_textarea_with_room_for_a_snippet(): void
+    {
+        $vars = $this->fieldVars();
+
+        self::assertSame('setono_sylius_plausible.form.channel.plausible_script_identifier', $vars['label'] ?? null);
+
+        $attr = $vars['attr'] ?? null;
+        self::assertIsArray($attr);
+        self::assertSame(5, $attr['rows'] ?? null);
+    }
+
+    /**
+     * @test
+     */
+    public function it_maps_onto_the_configured_channel_class(): void
+    {
+        $form = $this->factory->create(ChannelPlausibleType::class);
+
+        self::assertSame(Channel::class, $form->getConfig()->getDataClass());
     }
 
     /**
@@ -154,5 +172,21 @@ final class ChannelPlausibleTypeTest extends TypeTestCase
 
         self::assertCount(1, $errors);
         self::assertSame('setono_sylius_plausible.plausible_script.invalid', $errors[0]->getMessageTemplate());
+    }
+
+    /**
+     * @return array<array-key, mixed>
+     */
+    private function fieldVars(): array
+    {
+        $view = $this->factory->create(ChannelPlausibleType::class, new Channel())->createView();
+        $field = $view->children['plausibleScriptIdentifier'];
+        self::assertInstanceOf(FormView::class, $field);
+
+        // FormView::$vars is an untyped public property, so narrow it before reading offsets
+        $vars = $field->vars;
+        self::assertIsArray($vars);
+
+        return $vars;
     }
 }

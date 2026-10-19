@@ -104,6 +104,22 @@ final class NotificationCheckerTest extends TestCase
     /**
      * @test
      */
+    public function it_still_checks_the_channels_after_a_disabled_one(): void
+    {
+        $this->loginAsAdmin();
+        $this->channelRepository->findAll()->willReturn([
+            $this->channel(null, enabled: false),
+            $this->channel(null),
+        ]);
+        $this->hashGenerator->generate(Argument::type('array'))->willReturn('hash123');
+        $this->dismissalRepository->findValidDismissal($this->adminUser(), 'hash123')->willReturn(null);
+
+        self::assertTrue($this->createChecker()->shouldShowNotification());
+    }
+
+    /**
+     * @test
+     */
     public function it_returns_true_when_an_enabled_channel_has_no_identifier(): void
     {
         $this->loginAsAdmin();

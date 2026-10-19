@@ -127,4 +127,44 @@ final class PropertiesTest extends TestCase
         yield 'empty string' => [''];
         yield 'appending without a key' => [null];
     }
+
+    /**
+     * A property stored under an empty key through set() must still be unreachable through array access.
+     *
+     * @test
+     *
+     * @dataProvider arrayAccessOperations
+     *
+     * @param \Closure(Properties): mixed $operation
+     */
+    public function it_rejects_an_empty_offset_on_every_array_access(\Closure $operation): void
+    {
+        $properties = (new Properties())->set('', 'value');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Properties are key value pairs, where the key must be a string');
+
+        $operation($properties);
+    }
+
+    /**
+     * @return iterable<string, array{\Closure(Properties): mixed}>
+     */
+    public static function arrayAccessOperations(): iterable
+    {
+        yield 'isset' => [static fn (Properties $properties): bool => isset($properties[''])];
+        yield 'read' => [static fn (Properties $properties): mixed => $properties['']];
+    }
+
+    /**
+     * @test
+     */
+    public function it_tells_whether_a_property_exists(): void
+    {
+        $properties = new Properties();
+        self::assertFalse($properties->has('property1'));
+
+        $properties->set('property1', null);
+        self::assertTrue($properties->has('property1'));
+    }
 }

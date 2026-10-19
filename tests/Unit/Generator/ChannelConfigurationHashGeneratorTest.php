@@ -113,16 +113,19 @@ final class ChannelConfigurationHashGeneratorTest extends TestCase
      */
     public function it_skips_channels_without_code(): void
     {
-        $channel = $this->prophesize(ChannelInterface::class);
-        $channel->getCode()->willReturn(null);
-        $channel->getPlausibleScriptIdentifier()->willReturn('pa-abc123');
+        $channelWithoutCode = $this->prophesize(ChannelInterface::class);
+        $channelWithoutCode->getCode()->willReturn(null);
+        $channelWithoutCode->getPlausibleScriptIdentifier()->willReturn('pa-abc123');
 
-        $channels = [$channel->reveal()];
+        $channel = $this->prophesize(ChannelInterface::class);
+        $channel->getCode()->willReturn('WEB');
+        $channel->getPlausibleScriptIdentifier()->willReturn('pa-xyz789');
 
         $generator = new ChannelConfigurationHashGenerator();
 
-        $hash = $generator->generate($channels);
-
-        self::assertSame(64, strlen($hash));
+        self::assertSame(
+            $generator->generate([$channel->reveal()]),
+            $generator->generate([$channelWithoutCode->reveal(), $channel->reveal()]),
+        );
     }
 }
